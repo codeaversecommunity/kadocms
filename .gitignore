@@ -8,15 +8,15 @@ node_modules
 # testing
 coverage
 
-# build outputs
-.nuxt/
-.output/
+# next.js
+.next/
 out/
 build
 
 # misc
 .DS_Store
 *.pem
+dist/
 
 # debug
 npm-debug.log*
@@ -29,6 +29,7 @@ yarn-error.log*
 .env.development.local
 .env.test.local
 .env.production.local
+.env.staging.local
 
 # turbo
 .turbo

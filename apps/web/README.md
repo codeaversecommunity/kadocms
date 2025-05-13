@@ -1,23 +1,35 @@
-## Getting Started
+![nuxt-shadcn-dashboard-social-card](https://nuxt-shadcn-dashboard.vercel.app/social-card.png)
 
-First, run the development server:
+# Nuxt Shadcn UnoCSS - Dashboard
 
-```bash
-pnpm dev
+[![built with nuxt][nuxt-src]][nuxt-href]
+
+- [Live demo](https://nuxt-shadcn-dashboard.vercel.app)
+- [Component Documentation](https://shadcn-vue.com/docs/introduction)
+
+## Quick Start
+
+```bash [Terminal]
+npx degit dianprata/nuxt-shadcn-dashboard my-dashboard-app
+cd my-dashboard-app
+pnpm i # If you don't have pnpm installed, run: npm install -g pnpm
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Contributing
 
-You can start editing the page by modifying `src/app.vue`. The page auto-updates as you edit the file.
+1. Clone this repository.
+2. Install dependencies `pnpm install`.
+3. Use `pnpm run dev` to start dev server.
 
-## Learn More
+## Credits
 
-To learn more about Vue3, take a look at the following resources:
+- [Nuxt.js](https://nuxtjs.org/)
+- [Shadcn Vue](https://shadcn-vue.com/)
+- [UnoCSS](https://unocss.com/)
 
-- [Vue Official Documentation](https://vuejs.org/guide/) - learn about Vue framework for building web user interfaces.
+## License
 
-## Deploy on Vercel
+MIT
 
-You can easily deploy your Vue app by using the [Vercel Platform](https://vercel.com/new?utm_source=github.com&utm_medium=referral&utm_campaign=turborepo-readme).
-
-Check out our [Vite deployment documentation](https://vercel.com/docs/frameworks/vite) for more details.
+[nuxt-src]: https://img.shields.io/badge/Built%20With%20Nuxt-18181B?logo=nuxt.js
+[nuxt-href]: https://nuxt.com/

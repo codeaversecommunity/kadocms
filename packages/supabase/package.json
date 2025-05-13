@@ -1,0 +1,21 @@
+{
+  "name": "@repo/supabase",
+  "version": "1.0.0",
+  "description": "",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc -w"
+  },
+  "author": "lazlanrafar",
+  "license": "ISC",
+  "dependencies": {
+    "@supabase/supabase-js": "^2.49.4"
+  },
+  "devDependencies": {
+    "@types/node": "^20.8.3",
+    "typescript": "5.1.3"
+  }
+}
