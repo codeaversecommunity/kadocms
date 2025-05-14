@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { cn } from "@/lib/utils";
-import { supabase } from "@repo/supabase";
 
 const props = defineProps({
   class: {
@@ -12,6 +11,8 @@ const props = defineProps({
     default: "Google",
   },
 });
+
+const supabase = useSupabaseClient();
 
 async function signInWithGoogle() {
   const { error } = await supabase.auth.signInWithOAuth({

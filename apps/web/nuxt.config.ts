@@ -2,13 +2,6 @@
 export default defineNuxtConfig({
   devtools: { enabled: true },
 
-  // runtimeConfig: {
-  //   public: {
-  //     supabaseUrl: process.env.SUPABASE_URL,
-  //     supabaseKey: process.env.SUPABASE_KEY,
-  //   },
-  // },
-
   modules: [
     "@unocss/nuxt",
     "shadcn-nuxt",
@@ -17,7 +10,7 @@ export default defineNuxtConfig({
     "@nuxt/icon",
     "@nuxtjs/color-mode",
     "@pinia/nuxt",
-    // "@nuxtjs/supabase",
+    "@nuxtjs/supabase",
   ],
 
   // supabase: {
