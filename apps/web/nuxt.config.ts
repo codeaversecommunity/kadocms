@@ -2,12 +2,12 @@
 export default defineNuxtConfig({
   devtools: { enabled: true },
 
-  runtimeConfig: {
-    public: {
-      supabaseUrl: process.env.SUPABASE_URL,
-      supabaseKey: process.env.SUPABASE_KEY,
-    },
-  },
+  // runtimeConfig: {
+  //   public: {
+  //     supabaseUrl: process.env.SUPABASE_URL,
+  //     supabaseKey: process.env.SUPABASE_KEY,
+  //   },
+  // },
 
   modules: [
     "@unocss/nuxt",
@@ -15,9 +15,18 @@ export default defineNuxtConfig({
     "@vueuse/nuxt",
     "@nuxt/eslint",
     "@nuxt/icon",
-    "@pinia/nuxt",
     "@nuxtjs/color-mode",
+    "@pinia/nuxt",
+    // "@nuxtjs/supabase",
   ],
+
+  // supabase: {
+  //   redirectOptions: {
+  //     login: "/login",
+  //     callback: "/confirm", // <--
+  //     exclude: ["/register", "/forgot-password"],
+  //   },
+  // },
 
   css: ["@unocss/reset/tailwind.css"],
 

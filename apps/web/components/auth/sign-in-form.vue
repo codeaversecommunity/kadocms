@@ -26,8 +26,8 @@ function onSubmit(event: Event) {
 <template>
   <form class="grid gap-6" @submit="onSubmit">
     <div class="flex flex-col gap-4">
-      <SignInWithGithubButton label="Login with Github" />
-      <SignInWithGoogleButton label="Login with Google" />
+      <!-- <SignInWithGithubButton label="Login with Github" />
+      <SignInWithGoogleButton label="Login with Google" /> -->
     </div>
     <Separator label="Or continue with" />
     <div class="grid gap-2">
