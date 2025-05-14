@@ -1,21 +1,27 @@
 <script setup lang="ts">
-import { useSidebar } from '~/components/ui/sidebar'
+import { useSidebar } from "~/components/ui/sidebar";
 
-defineProps<{
-  user: {
-    name: string
-    email: string
-    avatar: string
-  }
-}>()
+const { isMobile, setOpenMobile } = useSidebar();
 
-const { isMobile, setOpenMobile } = useSidebar()
+const router = useRouter();
+const supabase = useSupabaseClient();
+const supabaseUser = useSupabaseUser();
 
-function handleLogout() {
-  navigateTo('/login')
+const user = supabaseUser.value?.user_metadata;
+
+function handleAvatarFallback() {
+  return user?.name
+    .split(" ")
+    .map((n: any) => (n ? n[0] : ""))
+    .join("");
 }
 
-const showModalTheme = ref(false)
+function handleLogout() {
+  supabase.auth.signOut();
+  router.push("/login");
+}
+
+const showModalTheme = ref(false);
 </script>
 
 <template>
@@ -28,14 +34,14 @@ const showModalTheme = ref(false)
             class="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
           >
             <Avatar class="h-8 w-8 rounded-lg">
-              <AvatarImage :src="user.avatar" :alt="user.name" />
+              <AvatarImage :src="user?.avatar_url" :alt="user?.name" />
               <AvatarFallback class="rounded-lg">
-                {{ user.name.split(' ').map((n) => n[0]).join('') }}
+                {{ handleAvatarFallback() }}
               </AvatarFallback>
             </Avatar>
             <div class="grid flex-1 text-left text-sm leading-tight">
-              <span class="truncate font-semibold">{{ user.name }}</span>
-              <span class="truncate text-xs">{{ user.email }}</span>
+              <span class="truncate font-semibold">{{ user?.name }}</span>
+              <span class="truncate text-xs">{{ user?.email }}</span>
             </div>
             <Icon name="i-lucide-chevrons-up-down" class="ml-auto size-4" />
           </SidebarMenuButton>
@@ -48,14 +54,14 @@ const showModalTheme = ref(false)
           <DropdownMenuLabel class="p-0 font-normal">
             <div class="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
               <Avatar class="h-8 w-8 rounded-lg">
-                <AvatarImage :src="user.avatar" :alt="user.name" />
+                <AvatarImage :src="user?.avatar_url" :alt="user?.name" />
                 <AvatarFallback class="rounded-lg">
-                  {{ user.name.split(' ').map((n) => n[0]).join('') }}
+                  {{ handleAvatarFallback() }}
                 </AvatarFallback>
               </Avatar>
               <div class="grid flex-1 text-left text-sm leading-tight">
-                <span class="truncate font-semibold">{{ user.name }}</span>
-                <span class="truncate text-xs">{{ user.email }}</span>
+                <span class="truncate font-semibold">{{ user?.name }}</span>
+                <span class="truncate text-xs">{{ user?.email }}</span>
               </div>
             </div>
           </DropdownMenuLabel>
@@ -84,7 +90,11 @@ const showModalTheme = ref(false)
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem as-child>
-              <NuxtLink to="https://github.com/dianprata/nuxt-shadcn-dashboard" external target="_blank">
+              <NuxtLink
+                to="https://github.com/dianprata/nuxt-shadcn-dashboard"
+                external
+                target="_blank"
+              >
                 <Icon name="i-lucide-github" />
                 Github Repository
               </NuxtLink>
@@ -117,6 +127,4 @@ const showModalTheme = ref(false)
   </Dialog>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>
