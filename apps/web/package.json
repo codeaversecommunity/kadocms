@@ -3,7 +3,7 @@
   "type": "module",
   "version": "0.2.6",
   "description": "Shadcn Dashboard built with Nuxt",
-  "author": "Dian Pratama <dianpratama2@gmail.com>",
+  "author": "L Azlan Rafar <lazlanrafar@gmail.com>",
   "license": "MIT",
   "homepage": "https://dashboard.dianprata.com/",
   "repository": {
@@ -51,6 +51,7 @@
     "@tanstack/vue-table": "^8.21.2",
     "@unovis/ts": "^1.5.1",
     "@unovis/vue": "^1.5.1",
+    "@repo/supabase": "workspace:*",
     "embla-carousel": "^8.5.2",
     "embla-carousel-vue": "^8.5.2"
   },
