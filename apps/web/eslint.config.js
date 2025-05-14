@@ -1,24 +1,44 @@
-import antfu from '@antfu/eslint-config'
-import withNuxt from './.nuxt/eslint.config.mjs'
+import antfu from "@antfu/eslint-config";
+import withNuxt from "./.nuxt/eslint.config.mjs";
 
-export default withNuxt(antfu(
-  {
-    unocss: true,
-    formatters: true,
-  },
-  {
-    rules: {
-      // Allow trailing space in comments, for possible JSDoc formattings
-      'style/no-trailing-spaces': ['error', { ignoreComments: true }],
-      // Relaxes inline statements a bit
-      'style/max-statements-per-line': ['error', { max: 2 }],
+export default withNuxt(
+  antfu(
+    {
+      unocss: true,
+      formatters: true,
     },
-  },
-  // Allow trailing space for markdown formatting
-  {
-    files: ['**/*.md'],
-    rules: {
-      'style/no-trailing-spaces': 'off',
+    {
+      rules: {
+        // Allow trailing spaces in comments
+        noTrailingSpaces: ["error", { ignoreComments: true }],
+        "style/no-trailing-spaces": "off", // needs quotes due to slash
+
+        maxStatementsPerLine: ["warn", { max: 2 }],
+        "style/max-statements-per-line": "off",
+
+        quotes: "off",
+        "style/quotes": "off",
+
+        semi: "off",
+        "style/semi": "off",
+
+        commaDangle: "off",
+        "style/comma-dangle": "off",
+
+        operatorLinebreak: "off",
+        "style/operator-linebreak": "off",
+
+        "antfu/if-newline": "off",
+
+        braceStyle: "off",
+        "style/brace-style": "off",
+      },
     },
-  },
-))
+    {
+      files: ["**/*.md"],
+      rules: {
+        "style/no-trailing-spaces": "off",
+      },
+    }
+  )
+);
