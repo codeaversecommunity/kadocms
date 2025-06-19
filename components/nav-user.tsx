@@ -25,6 +25,8 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/atoms/sidebar";
+import { createClient } from "@/utils/supabase/client";
+import { useRouter } from "next/navigation";
 
 export function NavUser({
   user,
@@ -36,6 +38,13 @@ export function NavUser({
   };
 }) {
   const { isMobile } = useSidebar();
+  const supabase = createClient();
+  const router = useRouter();
+
+  const logout = async () => {
+    await supabase.auth.signOut();
+    router.push("/login");
+  };
 
   return (
     <SidebarMenu>
@@ -98,7 +107,7 @@ export function NavUser({
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
+            <DropdownMenuItem onClick={logout}>
               <LogOut />
               Log out
             </DropdownMenuItem>

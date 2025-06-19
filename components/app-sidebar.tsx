@@ -17,7 +17,7 @@ import {
 import { NavMain } from "@/components/nav-main";
 import { NavProjects } from "@/components/nav-projects";
 import { NavUser } from "@/components/nav-user";
-import { TeamSwitcher } from "@/components/team-switcher";
+import { WorkspaceSwitcher } from "@/components/workspace-switcher";
 import {
   Sidebar,
   SidebarContent,
@@ -28,146 +28,134 @@ import {
 
 // This is sample data.
 const data = {
-  user: {
-    name: "shadcn",
-    email: "m@example.com",
-    avatar: "/avatars/shadcn.jpg",
-  },
-  teams: [
-    {
-      name: "Acme Inc",
-      logo: GalleryVerticalEnd,
-      plan: "Enterprise",
-    },
-    {
-      name: "Acme Corp.",
-      logo: AudioWaveform,
-      plan: "Startup",
-    },
-    {
-      name: "Evil Corp.",
-      logo: Command,
-      plan: "Free",
-    },
-  ],
   navMain: [
     {
-      title: "Playground",
-      url: "#",
+      title: "Dashboard",
+      url: "/dashboard",
       icon: SquareTerminal,
       isActive: true,
       items: [
         {
-          title: "History",
-          url: "#",
+          title: "Overview",
+          url: "/dashboard",
         },
         {
-          title: "Starred",
-          url: "#",
+          title: "Analytics",
+          url: "/dashboard/analytics",
         },
         {
           title: "Settings",
-          url: "#",
+          url: "/dashboard/settings",
         },
       ],
     },
     {
-      title: "Models",
-      url: "#",
+      title: "Content Types",
+      url: "/dashboard/content-types",
       icon: Bot,
       items: [
         {
-          title: "Genesis",
-          url: "#",
+          title: "All Types",
+          url: "/dashboard/content-types",
         },
         {
-          title: "Explorer",
-          url: "#",
-        },
-        {
-          title: "Quantum",
-          url: "#",
+          title: "Create New",
+          url: "/dashboard/content-types/new",
         },
       ],
     },
     {
-      title: "Documentation",
-      url: "#",
+      title: "Media",
+      url: "/dashboard/media",
       icon: BookOpen,
       items: [
         {
-          title: "Introduction",
-          url: "#",
+          title: "All Media",
+          url: "/dashboard/media",
         },
         {
-          title: "Get Started",
-          url: "#",
-        },
-        {
-          title: "Tutorials",
-          url: "#",
-        },
-        {
-          title: "Changelog",
-          url: "#",
+          title: "Upload",
+          url: "/dashboard/media/upload",
         },
       ],
     },
     {
       title: "Settings",
-      url: "#",
+      url: "/dashboard/settings",
       icon: Settings2,
       items: [
         {
           title: "General",
-          url: "#",
+          url: "/dashboard/settings",
         },
         {
-          title: "Team",
-          url: "#",
+          title: "Workspace",
+          url: "/dashboard/settings/workspace",
         },
         {
           title: "Billing",
-          url: "#",
+          url: "/dashboard/settings/billing",
         },
         {
-          title: "Limits",
-          url: "#",
+          title: "Members",
+          url: "/dashboard/settings/members",
         },
       ],
     },
   ],
   projects: [
     {
-      name: "Design Engineering",
-      url: "#",
+      name: "API Documentation",
+      url: "/dashboard/api-docs",
       icon: Frame,
     },
     {
-      name: "Sales & Marketing",
-      url: "#",
+      name: "Webhooks",
+      url: "/dashboard/webhooks",
       icon: PieChart,
     },
     {
-      name: "Travel",
-      url: "#",
+      name: "Integrations",
+      url: "/dashboard/integrations",
       icon: Map,
     },
   ],
 };
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
+  user?: {
+    id: string;
+    full_name: string | null;
+    email: string;
+    avatar: string | null;
+  };
+  workspaces?: {
+    id: string;
+    name: string;
+    plan_type: string;
+  }[];
+}
+
+export function AppSidebar({ user, workspaces = [], ...props }: AppSidebarProps) {
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
-        <TeamSwitcher teams={data.teams} />
+        <WorkspaceSwitcher workspaces={workspaces} />
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={data.navMain} />
         <NavProjects projects={data.projects} />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={data.user} />
+        {user && (
+          <NavUser 
+            user={{
+              name: user.full_name || user.email.split('@')[0],
+              email: user.email,
+              avatar: user.avatar || "",
+            }} 
+          />
+        )}
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>
