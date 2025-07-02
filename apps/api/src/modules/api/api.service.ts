@@ -254,7 +254,6 @@ export class ApiService {
     try {
       await this.prisma.tbs_entry_log.createMany({
         data: logs,
-        skipDuplicates: true,
       });
     } catch (error) {
       // Log error but don't fail the API request

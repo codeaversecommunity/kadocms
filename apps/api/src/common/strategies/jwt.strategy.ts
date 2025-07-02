@@ -10,10 +10,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     private configService: ConfigService,
     private usersService: UsersService,
   ) {
-    console.log('Initializing JWT Strategy...', {
-      key: configService.get<string>('JWT_SECRET'),
-    });
-
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
