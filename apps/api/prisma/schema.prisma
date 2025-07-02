@@ -1,0 +1,233 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  // output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// User model
+model tbm_user {
+  id             String   @id @default(uuid())
+  email          String   @unique
+  email_verified Boolean  @default(false)
+  username       String?
+  full_name      String?
+  avatar         String?
+  created_at     DateTime @default(now())
+  updated_at     DateTime @updatedAt
+  is_deleted     Boolean  @default(false)
+
+  workspace_id String?
+  workspace    tbm_workspace? @relation("workspace_active", fields: [workspace_id], references: [id])
+
+  // Relations
+  created_workspaces  tbm_workspace[]        @relation("workspace_creator")
+  modified_workspaces tbm_workspace[]        @relation("workspace_modifier")
+  workspace_members   tbs_workspace_member[]
+
+  created_media  tbm_media[] @relation("media_creator")
+  modified_media tbm_media[] @relation("media_modifier")
+
+  entry_logs tbs_entry_log[]
+
+  created_entries  tbm_entry[] @relation("entry_creator")
+  modified_entries tbm_entry[] @relation("entry_modifier")
+
+  created_workspace_members  tbs_workspace_member[] @relation("workspace_member_creator")
+  modified_workspace_members tbs_workspace_member[] @relation("workspace_member_modifier")
+
+  created_object_types  tbm_object_type[] @relation("object_type_creator")
+  modified_object_types tbm_object_type[] @relation("object_type_modifier")
+
+  created_field_definitions  tbm_field_definition[] @relation("field_definition_creator")
+  modified_field_definitions tbm_field_definition[] @relation("field_definition_modifier")
+
+  @@index([created_at])
+}
+
+// Workspace model (renamed from team)
+model tbm_workspace {
+  id         String   @id @default(uuid())
+  name       String
+  slug       String   @unique
+  status     String   @default("Active")
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  is_deleted Boolean  @default(false)
+
+  // Stripe subscription info
+  stripe_customer_id     String?
+  stripe_subscription_id String?
+  subscription_status    String? @default("free")
+  plan_type              String? @default("free")
+
+  // Creator / Modifier
+  creator_id String
+  creator    tbm_user @relation("workspace_creator", fields: [creator_id], references: [id])
+
+  modifier_id String?
+  modifier    tbm_user? @relation("workspace_modifier", fields: [modifier_id], references: [id])
+
+  // Relations
+  members      tbs_workspace_member[]
+  media_assets tbm_media[]
+  object_types tbm_object_type[]
+  active_users tbm_user[]             @relation("workspace_active")
+
+  @@index([status])
+  @@index([stripe_customer_id])
+}
+
+// Workspace Member (renamed from team member)
+model tbs_workspace_member {
+  id         String   @id @default(uuid())
+  role       String   @default("Member")
+  status     String   @default("Active")
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  is_deleted Boolean  @default(false)
+
+  workspace_id String
+  workspace    tbm_workspace @relation(fields: [workspace_id], references: [id])
+
+  user_id String
+  user    tbm_user @relation(fields: [user_id], references: [id])
+
+  creator_id String?
+  creator    tbm_user? @relation("workspace_member_creator", fields: [creator_id], references: [id])
+
+  modifier_id String?
+  modifier    tbm_user? @relation("workspace_member_modifier", fields: [modifier_id], references: [id])
+
+  @@unique([workspace_id, user_id])
+  @@index([workspace_id, user_id])
+}
+
+// Media Model
+model tbm_media {
+  id          String  @id @default(uuid())
+  name        String
+  media_type  String  @default("IMAGE")
+  file_size   Int?
+  file_path   String
+  width       Int?
+  height      Int?
+  alt_text    String?
+  description String?
+
+  creator_id String
+  creator    tbm_user @relation("media_creator", fields: [creator_id], references: [id])
+
+  modifier_id String?
+  modifier    tbm_user? @relation("media_modifier", fields: [modifier_id], references: [id])
+
+  workspace_id String
+  workspace    tbm_workspace @relation(fields: [workspace_id], references: [id])
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  is_deleted Boolean  @default(false)
+
+  @@index([workspace_id])
+}
+
+// Object Type - For CMS or Dynamic Entries
+model tbm_object_type {
+  id   String @id @default(uuid())
+  name String
+  slug String
+
+  workspace_id String
+  workspace    tbm_workspace @relation(fields: [workspace_id], references: [id])
+
+  entries           tbm_entry[]
+  field_definitions tbm_field_definition[] @relation("object_type_fields")
+
+  relation_fields tbm_field_definition[] @relation("field_relation")
+
+  creator_id String?
+  creator    tbm_user? @relation("object_type_creator", fields: [creator_id], references: [id])
+
+  modifier_id String?
+  modifier    tbm_user? @relation("object_type_modifier", fields: [modifier_id], references: [id])
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  is_deleted Boolean  @default(false)
+
+  @@index([slug])
+  @@index([workspace_id])
+}
+
+// Field Definition - Describes schema for entries
+model tbm_field_definition {
+  id            String  @id @default(uuid())
+  name          String
+  display_name  String
+  type          String  @default("TEXT")
+  required      Boolean @default(false)
+  multiple      Boolean @default(false)
+  placeholder   String?
+  default_value Json?
+
+  object_type_id String
+  object_type    tbm_object_type @relation("object_type_fields", fields: [object_type_id], references: [id])
+
+  relation_to_id String?
+  relation_to    tbm_object_type? @relation("field_relation", fields: [relation_to_id], references: [id])
+
+  creator_id String?
+  creator    tbm_user? @relation("field_definition_creator", fields: [creator_id], references: [id])
+
+  modifier_id String?
+  modifier    tbm_user? @relation("field_definition_modifier", fields: [modifier_id], references: [id])
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  is_deleted Boolean  @default(false)
+}
+
+// Entry - Actual data filled in by users
+model tbm_entry {
+  id             String          @id @default(uuid())
+  object_type_id String
+  object_type    tbm_object_type @relation(fields: [object_type_id], references: [id])
+  data           Json
+  created_at     DateTime        @default(now())
+  updated_at     DateTime        @updatedAt
+  is_deleted     Boolean         @default(false)
+
+  entry_logs tbs_entry_log[]
+
+  creator_id String?
+  creator    tbm_user? @relation("entry_creator", fields: [creator_id], references: [id])
+
+  modifier_id String?
+  modifier    tbm_user? @relation("entry_modifier", fields: [modifier_id], references: [id])
+
+  @@index([object_type_id])
+  @@index([created_at])
+}
+
+// Entry Log - Track API usage per user
+model tbs_entry_log {
+  id         String    @id @default(uuid())
+  entry_id   String
+  entry      tbm_entry @relation(fields: [entry_id], references: [id])
+  user_id    String
+  user       tbm_user  @relation(fields: [user_id], references: [id])
+  ip_address String?
+  fetched_at DateTime  @default(now())
+
+  @@index([user_id])
+  @@index([fetched_at])
+}
