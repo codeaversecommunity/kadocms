@@ -3,7 +3,7 @@
 import { useTransition } from "react";
 import { Button } from "@/components/atoms/button";
 import { Icons } from "@/components/atoms/icons";
-import { supabaseAuth } from "@/lib/supabase";
+import { supabaseSignInWithOAuth } from "@/lib/supabase/actions";
 
 interface OAuthButtonProps {
   provider: "google" | "github";
@@ -15,14 +15,9 @@ export default function OAuthButton({ provider, label }: OAuthButtonProps) {
 
   async function handleOAuth() {
     startTransition(async () => {
-      const { data, error } = await supabaseAuth.signInWithOAuth(provider);
-
-      if (error) {
-        throw new Error(error.message);
-      }
-
-      if (data.url) {
-        window.location.href = data.url; // Redirect to OAuth provider
+      const url = await supabaseSignInWithOAuth(provider);
+      if (url) {
+        window.location.href = url; // Redirect to OAuth provider
       }
     });
   }
