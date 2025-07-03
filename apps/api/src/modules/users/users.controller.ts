@@ -12,7 +12,7 @@ import { UsersService } from './users.service';
 import { CreateUserDto, UpdateUserDto } from './dto/user.dto';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
-import { tbm_user } from '@prisma/client';
+import { User } from '@prisma/client';
 
 @Controller('users')
 @UseGuards(JwtAuthGuard)
@@ -20,7 +20,7 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Get('profile')
-  getProfile(@CurrentUser() user: tbm_user) {
+  getProfile(@CurrentUser() user: User) {
     return user;
   }
 
@@ -35,10 +35,7 @@ export class UsersController {
   }
 
   @Patch('profile')
-  updateProfile(
-    @CurrentUser() user: tbm_user,
-    @Body() updateUserDto: UpdateUserDto,
-  ) {
+  updateProfile(@CurrentUser() user: User, @Body() updateUserDto: UpdateUserDto) {
     return this.usersService.update(user.id, updateUserDto);
   }
 

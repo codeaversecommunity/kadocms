@@ -1,26 +1,32 @@
-import { IsEmail, IsString, MinLength, IsOptional } from 'class-validator';
+import { IsEmail, IsString, IsOptional, IsObject, IsBoolean } from 'class-validator';
 
-export class RegisterDto {
-  @IsEmail()
-  email: string;
-
+export class OAuthCallbackDto {
   @IsString()
-  @MinLength(6)
-  password: string;
+  access_token: string;
+
+  @IsObject()
+  user: {
+    id: string;
+    email: string;
+    email_confirmed_at?: string;
+    user_metadata?: {
+      full_name?: string;
+      name?: string;
+      user_name?: string;
+      preferred_username?: string;
+      avatar_url?: string;
+      picture?: string;
+      [key: string]: any;
+    };
+    [key: string]: any;
+  };
 
   @IsString()
   @IsOptional()
-  full_name?: string;
-
-  @IsString()
-  @IsOptional()
-  username?: string;
+  refresh_token?: string;
 }
 
-export class LoginDto {
-  @IsEmail()
-  email: string;
-
+export class RefreshTokenDto {
   @IsString()
-  password: string;
+  access_token: string;
 }

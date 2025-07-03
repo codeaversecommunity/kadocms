@@ -13,7 +13,12 @@ export class CreateUserDto {
   username?: string;
 
   @IsString()
-  supabaseId: string;
+  @IsOptional()
+  avatar?: string;
+
+  @IsBoolean()
+  @IsOptional()
+  email_verified?: boolean;
 
   @IsString()
   @IsOptional()
@@ -36,4 +41,8 @@ export class UpdateUserDto {
   @IsBoolean()
   @IsOptional()
   email_verified?: boolean;
+
+  @IsString()
+  @IsOptional()
+  workspace_id?: string;
 }

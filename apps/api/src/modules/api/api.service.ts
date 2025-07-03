@@ -14,11 +14,11 @@ export class ApiService {
 
   async getPublicEntries(
     workspaceSlug: string,
-    objectTypeSlug: string,
+    contentSlug: string,
     queryParams: QueryParams,
     clientIp: string,
   ) {
-    // Find workspace and object type
+    // Find workspace and content type
     const workspace = await this.prisma.tbm_workspace.findUnique({
       where: { slug: workspaceSlug, is_deleted: false },
     });
@@ -27,9 +27,9 @@ export class ApiService {
       throw new NotFoundException('Workspace not found');
     }
 
-    const objectType = await this.prisma.tbm_object_type.findFirst({
+    const content = await this.prisma.tbm_content.findFirst({
       where: {
-        slug: objectTypeSlug,
+        slug: contentSlug,
         workspace_id: workspace.id,
         is_deleted: false,
       },
@@ -37,7 +37,7 @@ export class ApiService {
         field_definitions: {
           where: { is_deleted: false },
           include: {
-            relation_to: {
+            relation_to_content: {
               select: {
                 id: true,
                 name: true,
@@ -49,17 +49,17 @@ export class ApiService {
       },
     });
 
-    if (!objectType) {
-      throw new NotFoundException('Object type not found');
+    if (!content) {
+      throw new NotFoundException('Content type not found');
     }
 
     const { page, limit, sort, order } = queryParams;
     const skip = (page - 1) * limit;
 
     const [entries, total] = await Promise.all([
-      this.prisma.tbm_entry.findMany({
+      this.prisma.tbm_content_entry.findMany({
         where: {
-          object_type_id: objectType.id,
+          content_id: content.id,
           is_deleted: false,
         },
         orderBy: {
@@ -68,9 +68,9 @@ export class ApiService {
         skip,
         take: limit,
       }),
-      this.prisma.tbm_entry.count({
+      this.prisma.tbm_content_entry.count({
         where: {
-          object_type_id: objectType.id,
+          content_id: content.id,
           is_deleted: false,
         },
       }),
@@ -79,21 +79,21 @@ export class ApiService {
     // Process entries to resolve relations
     const processedEntries = await this.processEntriesWithRelations(
       entries,
-      objectType.field_definitions,
+      content.field_definitions,
     );
 
     // Log API usage for each entry
     if (entries.length > 0) {
-      await this.logApiUsage(entries.map(e => e.id), clientIp);
+      await this.logApiUsage(content.id, clientIp);
     }
 
     return {
       data: processedEntries,
       meta: {
-        object_type: {
-          id: objectType.id,
-          name: objectType.name,
-          slug: objectType.slug,
+        content: {
+          id: content.id,
+          name: content.name,
+          slug: content.slug,
         },
         workspace: {
           id: workspace.id,
@@ -106,13 +106,13 @@ export class ApiService {
           total,
           pages: Math.ceil(total / limit),
         },
-        schema: objectType.field_definitions.map(field => ({
+        schema: content.field_definitions.map(field => ({
           name: field.name,
           display_name: field.display_name,
           type: field.type,
           required: field.required,
           multiple: field.multiple,
-          relation_to: field.relation_to,
+          relation_to_content: field.relation_to_content,
         })),
       },
     };
@@ -120,11 +120,11 @@ export class ApiService {
 
   async getPublicEntry(
     workspaceSlug: string,
-    objectTypeSlug: string,
+    contentSlug: string,
     entryId: string,
     clientIp: string,
   ) {
-    // Find workspace and object type
+    // Find workspace and content type
     const workspace = await this.prisma.tbm_workspace.findUnique({
       where: { slug: workspaceSlug, is_deleted: false },
     });
@@ -133,9 +133,9 @@ export class ApiService {
       throw new NotFoundException('Workspace not found');
     }
 
-    const objectType = await this.prisma.tbm_object_type.findFirst({
+    const content = await this.prisma.tbm_content.findFirst({
       where: {
-        slug: objectTypeSlug,
+        slug: contentSlug,
         workspace_id: workspace.id,
         is_deleted: false,
       },
@@ -143,7 +143,7 @@ export class ApiService {
         field_definitions: {
           where: { is_deleted: false },
           include: {
-            relation_to: {
+            relation_to_content: {
               select: {
                 id: true,
                 name: true,
@@ -155,14 +155,14 @@ export class ApiService {
       },
     });
 
-    if (!objectType) {
-      throw new NotFoundException('Object type not found');
+    if (!content) {
+      throw new NotFoundException('Content type not found');
     }
 
-    const entry = await this.prisma.tbm_entry.findFirst({
+    const entry = await this.prisma.tbm_content_entry.findFirst({
       where: {
         id: entryId,
-        object_type_id: objectType.id,
+        content_id: content.id,
         is_deleted: false,
       },
     });
@@ -174,39 +174,39 @@ export class ApiService {
     // Process entry to resolve relations
     const processedEntries = await this.processEntriesWithRelations(
       [entry],
-      objectType.field_definitions,
+      content.field_definitions,
     );
 
     // Log API usage
-    await this.logApiUsage([entry.id], clientIp);
+    await this.logApiUsage(content.id, clientIp);
 
     return {
       data: processedEntries[0],
       meta: {
-        object_type: {
-          id: objectType.id,
-          name: objectType.name,
-          slug: objectType.slug,
+        content: {
+          id: content.id,
+          name: content.name,
+          slug: content.slug,
         },
         workspace: {
           id: workspace.id,
           name: workspace.name,
           slug: workspace.slug,
         },
-        schema: objectType.field_definitions.map(field => ({
+        schema: content.field_definitions.map(field => ({
           name: field.name,
           display_name: field.display_name,
           type: field.type,
           required: field.required,
           multiple: field.multiple,
-          relation_to: field.relation_to,
+          relation_to_content: field.relation_to_content,
         })),
       },
     };
   }
 
   private async processEntriesWithRelations(entries: any[], fieldDefinitions: any[]) {
-    const relationFields = fieldDefinitions.filter(field => field.relation_to_id);
+    const relationFields = fieldDefinitions.filter(field => field.relation_to_content_id);
 
     for (const entry of entries) {
       for (const field of relationFields) {
@@ -215,17 +215,17 @@ export class ApiService {
         if (fieldValue) {
           if (field.multiple && Array.isArray(fieldValue)) {
             // Handle multiple relations
-            const relatedEntries = await this.prisma.tbm_entry.findMany({
+            const relatedEntries = await this.prisma.tbm_content_entry.findMany({
               where: {
                 id: { in: fieldValue },
-                object_type_id: field.relation_to_id,
+                content_id: field.relation_to_content_id,
                 is_deleted: false,
               },
             });
             entry.data[field.name] = relatedEntries;
           } else if (!field.multiple && typeof fieldValue === 'string') {
             // Handle single relation
-            const relatedEntry = await this.prisma.tbm_entry.findUnique({
+            const relatedEntry = await this.prisma.tbm_content_entry.findUnique({
               where: {
                 id: fieldValue,
                 is_deleted: false,
@@ -240,20 +240,16 @@ export class ApiService {
     return entries;
   }
 
-  private async logApiUsage(entryIds: string[], clientIp: string) {
-    // For now, we'll create logs without user_id since this is public API
-    // In a real implementation, you might want to track API keys or other identifiers
-    const logs = entryIds.map(entryId => ({
-      entry_id: entryId,
-      user_id: 'anonymous', // You might want to handle this differently
-      ip_address: clientIp,
-    }));
-
-    // Note: This will fail because user_id 'anonymous' doesn't exist
-    // You might want to create a system user or handle anonymous usage differently
+  private async logApiUsage(contentId: string, clientIp: string) {
+    // Create a system user for anonymous API usage tracking
+    // You might want to handle this differently based on your requirements
     try {
-      await this.prisma.tbs_entry_log.createMany({
-        data: logs,
+      await this.prisma.tbs_content_log.create({
+        data: {
+          content_id: contentId,
+          user_id: 'system', // You might want to create a system user
+          ip_address: clientIp,
+        },
       });
     } catch (error) {
       // Log error but don't fail the API request

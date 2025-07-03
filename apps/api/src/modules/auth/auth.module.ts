@@ -6,10 +6,12 @@ import { AuthController } from './auth.controller';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 import { JwtStrategy } from '../../common/strategies/jwt.strategy';
 import { UsersModule } from '../users/users.module';
+import { WorkspacesModule } from '../workspaces/workspaces.module';
 
 @Module({
   imports: [
     UsersModule,
+    WorkspacesModule,
     JwtModule.registerAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({

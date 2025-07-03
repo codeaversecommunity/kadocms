@@ -5,8 +5,6 @@ import { PrismaModule } from "./database/prisma/prisma.module";
 import { AuthModule } from "./modules/auth/auth.module";
 import { UsersModule } from "./modules/users/users.module";
 import { WorkspacesModule } from "./modules/workspaces/workspaces.module";
-import { ObjectTypesModule } from "./modules/object-types/object-types.module";
-import { EntriesModule } from "./modules/entries/entries.module";
 import { ApiModule } from "./modules/api/api.module";
 import { JwtAuthGuard } from "./common/guards/jwt-auth.guard";
 import { AppController } from "./app.controller";
@@ -14,6 +12,8 @@ import { ThrottlerModule } from "@nestjs/throttler";
 import { WinstonModule } from "nest-winston";
 import * as winston from "winston";
 import { LoggerMiddleware } from "./common/middleware/logger.middleware";
+import { ContentsModule } from "./modules/contents/contents.module";
+import { ContentEntriesModule } from "./modules/content-entries/content-entries.module";
 
 @Module({
   imports: [
@@ -53,8 +53,8 @@ import { LoggerMiddleware } from "./common/middleware/logger.middleware";
     AuthModule,
     UsersModule,
     WorkspacesModule,
-    ObjectTypesModule,
-    EntriesModule,
+    ContentsModule,
+    ContentEntriesModule,
     ApiModule,
   ],
   controllers: [AppController],

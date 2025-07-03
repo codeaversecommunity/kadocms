@@ -7,9 +7,11 @@ import {
   Param,
   Delete,
   UseGuards,
+  Query,
 } from '@nestjs/common';
 import { WorkspacesService } from './workspaces.service';
 import { CreateWorkspaceDto, UpdateWorkspaceDto } from './dto/workspace.dto';
+import { PaginationDto } from '../../common/dto/pagination.dto';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import { tbm_user } from '@prisma/client';
@@ -25,8 +27,8 @@ export class WorkspacesController {
   }
 
   @Get()
-  findAll(@CurrentUser() user: tbm_user) {
-    return this.workspacesService.findAll(user.id);
+  findAll(@Query() paginationDto: PaginationDto, @CurrentUser() user: tbm_user) {
+    return this.workspacesService.findAll(paginationDto, user.id);
   }
 
   @Get(':id')
