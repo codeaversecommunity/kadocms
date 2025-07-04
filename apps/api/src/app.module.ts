@@ -14,6 +14,7 @@ import * as winston from "winston";
 import { LoggerMiddleware } from "./common/middleware/logger.middleware";
 import { ContentsModule } from "./modules/contents/contents.module";
 import { ContentEntriesModule } from "./modules/content-entries/content-entries.module";
+import { MediaModule } from "./modules/media/media.module";
 
 @Module({
   imports: [
@@ -55,6 +56,7 @@ import { ContentEntriesModule } from "./modules/content-entries/content-entries.
     WorkspacesModule,
     ContentsModule,
     ContentEntriesModule,
+    MediaModule,
     ApiModule,
   ],
   controllers: [AppController],
