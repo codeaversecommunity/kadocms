@@ -34,10 +34,7 @@ type Type = {
   setReport: (report: Media | null) => void;
   setQueryParams: (params: Partial<MediaQueryParams>) => void;
 
-  upload: (
-    file: File,
-    data?: Partial<CreateMediaData>
-  ) => Promise<Media | null>;
+  upload: (file: File, data?: Partial<CreateMediaData>) => Promise<boolean>;
   update: (fileId: string, data: Partial<UpdateMediaData>) => Promise<void>;
   delete: (fileId: string) => Promise<void>;
 
@@ -83,7 +80,6 @@ export const useMediaStore = create<Type>((set, get) => ({
       };
 
       const response = await getMedia(finalParams);
-      console.log("Media response:", response);
 
       set({
         reports: response.data,
@@ -116,22 +112,15 @@ export const useMediaStore = create<Type>((set, get) => ({
         ...data,
       };
 
-      const response: any = await uploadMediaFile(file, uploadData);
+      await uploadMediaFile(file, uploadData);
 
-      if (response.success) {
-        toast.success("File uploaded successfully");
+      await get().getReports({ page: 1 });
 
-        // Refresh the reports list
-        await get().getReports({ page: 1 });
-
-        return response.data;
-      } else {
-        throw new Error("Upload failed");
-      }
+      return true;
     } catch (error) {
       console.error("Failed to upload file:", error);
       toast.error("Failed to upload file");
-      return null;
+      return false;
     } finally {
       set({ loading_upload: false });
     }

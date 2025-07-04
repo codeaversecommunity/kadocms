@@ -38,8 +38,6 @@ export async function uploadMediaFile(file: File, data: CreateMediaData) {
   return $api("/media/upload", {
     method: "POST",
     body: formData,
-    // Don't set Content-Type header for FormData - let browser set it with boundary
-    headers: {},
   });
 }
 

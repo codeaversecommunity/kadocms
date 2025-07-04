@@ -17,6 +17,8 @@ import {
 } from "@/components/atoms/table";
 import { cn } from "@/lib/utils";
 import { useMediaStore } from "@/modules/media/media.store";
+import { MediaUploadDialog } from "./media-upload-dialog";
+import MediaPreview from "./media-preview";
 
 export default function MediaDataTable() {
   const mediaStore = useMediaStore();
@@ -98,14 +100,16 @@ export default function MediaDataTable() {
                     onClick={() => mediaStore.setReport(file)}
                   >
                     <TableCell>
-                      {file.media_type.startsWith("image/") ? (
-                        <Image
-                          src={file.file_path}
-                          alt={file.alt_text || file.name}
-                          width={50}
-                          height={50}
-                          className="w-20 h-20 object-cover object-center rounded"
-                        />
+                      {file.media_type.includes("IMAGE") ? (
+                        <div className="">
+                          <Image
+                            src={file.file_path}
+                            alt={file.alt_text || file.name}
+                            width={50}
+                            height={50}
+                            className="w-20 h-20 object-contain object-center rounded bg-gray-200"
+                          />
+                        </div>
                       ) : (
                         <div className="w-full h-full flex items-center justify-center text-xs font-bold text-muted-foreground">
                           {file.name.split(".").pop()?.toUpperCase()}
@@ -137,15 +141,15 @@ export default function MediaDataTable() {
           </CardContent>
         </Card>
 
-        {/* <MediaPreview /> */}
+        <MediaPreview />
       </div>
 
       {/* Dialogs */}
-      {/* <MediaUploadDialog
+      <MediaUploadDialog
         open={isUploadOpen}
         onOpenChange={setIsUploadOpen}
         onUploadComplete={handleFileUpload}
-      /> */}
+      />
     </>
   );
 }

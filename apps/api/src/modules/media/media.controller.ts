@@ -11,6 +11,7 @@ import {
   UseInterceptors,
   UploadedFile,
   BadRequestException,
+  Logger,
 } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { MediaService } from "./media.service";
@@ -28,6 +29,8 @@ import { tbm_user } from "@prisma/client";
 @Controller("media")
 @UseGuards(JwtAuthGuard)
 export class MediaController {
+  private readonly logger = new Logger(MediaController.name);
+
   constructor(private readonly mediaService: MediaService) {}
 
   @Post("upload")
@@ -37,11 +40,20 @@ export class MediaController {
     @Body() createMediaDto: CreateMediaDto,
     @CurrentUser() user: tbm_user
   ) {
+    this.logger.debug(
+      `Upload request from user: ${user.id}, file: ${file?.originalname}`
+    );
+
     if (!file) {
       throw new BadRequestException("No file provided");
     }
 
-    return this.mediaService.uploadFile(file, createMediaDto, user.id);
+    return this.mediaService.uploadFile({
+      file,
+      createMediaDto,
+      user_id: user.id,
+      workspace_id: String(user.workspace_id),
+    });
   }
 
   @Post("upload-base64")
@@ -50,7 +62,12 @@ export class MediaController {
     @CurrentUser() user: tbm_user
   ) {
     const { base64_data, ...createMediaDto } = uploadBase64Dto;
-    return this.mediaService.uploadBase64(base64_data, createMediaDto, user.id);
+    return this.mediaService.uploadBase64({
+      base64Data: base64_data,
+      createMediaDto,
+      user_id: user.id,
+      workspace_id: String(user.workspace_id),
+    });
   }
 
   @Get()

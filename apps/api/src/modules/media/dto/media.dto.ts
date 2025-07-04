@@ -3,9 +3,6 @@ import { Transform } from "class-transformer";
 
 export class CreateMediaDto {
   @IsString()
-  workspace_id: string;
-
-  @IsString()
   @IsOptional()
   name?: string;
 

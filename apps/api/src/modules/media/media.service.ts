@@ -16,24 +16,30 @@ export class MediaService {
     private cloudinaryService: CloudinaryService
   ) {}
 
-  async uploadFile(
-    file: Express.Multer.File,
-    createMediaDto: CreateMediaDto,
-    userId: string
-  ) {
+  async uploadFile({
+    file,
+    createMediaDto,
+    user_id,
+    workspace_id,
+  }: {
+    file: Express.Multer.File;
+    createMediaDto: CreateMediaDto;
+    user_id: string;
+    workspace_id: string;
+  }) {
     // Check workspace access
     const workspace = await this.prisma.tbm_workspace.findUnique({
-      where: { id: createMediaDto.workspace_id, is_deleted: false },
+      where: { id: workspace_id, is_deleted: false },
       include: {
         members: {
-          where: { user_id: userId, status: "Active" },
+          where: { user_id: user_id, status: "Active" },
         },
       },
     });
 
     if (
       !workspace ||
-      (workspace.creator_id !== userId && workspace.members.length === 0)
+      (workspace.creator_id !== user_id && workspace.members.length === 0)
     ) {
       throw new ForbiddenException("You do not have access to this workspace");
     }
@@ -88,8 +94,8 @@ export class MediaService {
           height: cloudinaryResult.height,
           alt_text: createMediaDto.alt_text,
           description: createMediaDto.description,
-          workspace_id: createMediaDto.workspace_id,
-          creator_id: userId,
+          workspace_id: workspace_id,
+          creator_id: user_id,
         },
         include: {
           creator: {
@@ -120,24 +126,30 @@ export class MediaService {
     }
   }
 
-  async uploadBase64(
-    base64Data: string,
-    createMediaDto: CreateMediaDto,
-    userId: string
-  ) {
+  async uploadBase64({
+    base64Data,
+    createMediaDto,
+    user_id,
+    workspace_id,
+  }: {
+    base64Data: string;
+    createMediaDto: CreateMediaDto;
+    user_id: string;
+    workspace_id: string;
+  }) {
     // Check workspace access
     const workspace = await this.prisma.tbm_workspace.findUnique({
-      where: { id: createMediaDto.workspace_id, is_deleted: false },
+      where: { id: workspace_id, is_deleted: false },
       include: {
         members: {
-          where: { user_id: userId, status: "Active" },
+          where: { user_id: user_id, status: "Active" },
         },
       },
     });
 
     if (
       !workspace ||
-      (workspace.creator_id !== userId && workspace.members.length === 0)
+      (workspace.creator_id !== user_id && workspace.members.length === 0)
     ) {
       throw new ForbiddenException("You do not have access to this workspace");
     }
@@ -162,8 +174,8 @@ export class MediaService {
           height: cloudinaryResult.height,
           alt_text: createMediaDto.alt_text,
           description: createMediaDto.description,
-          workspace_id: createMediaDto.workspace_id,
-          creator_id: userId,
+          workspace_id: workspace_id,
+          creator_id: user_id,
         },
         include: {
           creator: {
@@ -287,7 +299,7 @@ export class MediaService {
     };
   }
 
-  async findOne(id: string, userId: string) {
+  async findOne(id: string, user_id: string) {
     const media = await this.prisma.tbm_media.findUnique({
       where: { id, is_deleted: false },
       include: {
@@ -318,14 +330,14 @@ export class MediaService {
       where: { id: media.workspace_id, is_deleted: false },
       include: {
         members: {
-          where: { user_id: userId, status: "Active" },
+          where: { user_id: user_id, status: "Active" },
         },
       },
     });
 
     if (
       !workspace ||
-      (workspace.creator_id !== userId && workspace.members.length === 0)
+      (workspace.creator_id !== user_id && workspace.members.length === 0)
     ) {
       throw new ForbiddenException("You do not have access to this workspace");
     }
@@ -333,7 +345,7 @@ export class MediaService {
     return media;
   }
 
-  async update(id: string, updateMediaDto: UpdateMediaDto, userId: string) {
+  async update(id: string, updateMediaDto: UpdateMediaDto, user_id: string) {
     const media = await this.prisma.tbm_media.findUnique({
       where: { id, is_deleted: false },
       include: { workspace: true },
@@ -348,14 +360,14 @@ export class MediaService {
       where: { id: media.workspace_id, is_deleted: false },
       include: {
         members: {
-          where: { user_id: userId, status: "Active" },
+          where: { user_id: user_id, status: "Active" },
         },
       },
     });
 
     if (
       !workspace ||
-      (workspace.creator_id !== userId && workspace.members.length === 0)
+      (workspace.creator_id !== user_id && workspace.members.length === 0)
     ) {
       throw new ForbiddenException("You do not have access to this workspace");
     }
@@ -364,7 +376,7 @@ export class MediaService {
       where: { id },
       data: {
         ...updateMediaDto,
-        modifier_id: userId,
+        modifier_id: user_id,
         updated_at: new Date(),
       },
       include: {
@@ -387,7 +399,7 @@ export class MediaService {
     });
   }
 
-  async remove(id: string, userId: string) {
+  async remove(id: string, user_id: string) {
     const media = await this.prisma.tbm_media.findUnique({
       where: { id, is_deleted: false },
     });
@@ -401,14 +413,14 @@ export class MediaService {
       where: { id: media.workspace_id, is_deleted: false },
       include: {
         members: {
-          where: { user_id: userId, status: "Active" },
+          where: { user_id: user_id, status: "Active" },
         },
       },
     });
 
     if (
       !workspace ||
-      (workspace.creator_id !== userId && workspace.members.length === 0)
+      (workspace.creator_id !== user_id && workspace.members.length === 0)
     ) {
       throw new ForbiddenException("You do not have access to this workspace");
     }
@@ -427,7 +439,7 @@ export class MediaService {
         where: { id },
         data: {
           is_deleted: true,
-          modifier_id: userId,
+          modifier_id: user_id,
           updated_at: new Date(),
         },
       });
@@ -439,7 +451,7 @@ export class MediaService {
         where: { id },
         data: {
           is_deleted: true,
-          modifier_id: userId,
+          modifier_id: user_id,
           updated_at: new Date(),
         },
       });
@@ -455,9 +467,9 @@ export class MediaService {
       quality?: string | number;
       format?: string;
     },
-    userId: string
+    user_id: string
   ) {
-    const media = await this.findOne(id, userId);
+    const media = await this.findOne(id, user_id);
 
     const publicId = this.extractPublicIdFromUrl(media.file_path);
     if (!publicId) {
