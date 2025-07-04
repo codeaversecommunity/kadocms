@@ -28,5 +28,7 @@ export async function $api<T>(
   }
 
   const data = await response.json();
+
+  if (data.data?.length) return data;
   return data.data || data;
 }

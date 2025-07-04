@@ -2,12 +2,9 @@
 
 import * as React from "react";
 import {
-  AudioWaveform,
   BookOpen,
   Bot,
-  Command,
   Frame,
-  GalleryVerticalEnd,
   Map,
   PieChart,
   Settings2,
@@ -17,7 +14,7 @@ import {
 import { NavMain } from "@/components/app/nav-main";
 import { NavProjects } from "@/components/app/nav-projects";
 import { NavUser } from "@/components/app/nav-user";
-import { TeamSwitcher } from "@/components/app/team-switcher";
+import { WorkspaceSwitcher } from "@/components/app/team-switcher";
 import {
   Sidebar,
   SidebarContent,
@@ -26,31 +23,10 @@ import {
   SidebarRail,
 } from "@/components/atoms/sidebar";
 import { Profile } from "@/actions/user";
+import { Workspace } from "@/actions/workspace";
 
 // This is sample data.
 const data = {
-  user: {
-    name: "shadcn",
-    email: "m@example.com",
-    avatar: "/avatars/shadcn.jpg",
-  },
-  teams: [
-    {
-      name: "Acme Inc",
-      logo: GalleryVerticalEnd,
-      plan: "Enterprise",
-    },
-    {
-      name: "Acme Corp.",
-      logo: AudioWaveform,
-      plan: "Startup",
-    },
-    {
-      name: "Evil Corp.",
-      logo: Command,
-      plan: "Free",
-    },
-  ],
   navMain: [
     {
       title: "Playground",
@@ -157,11 +133,20 @@ const data = {
   ],
 };
 
-export function AppSidebar({ profile }: { profile?: Profile }) {
+export function AppSidebar({
+  profile,
+  workspaces,
+}: {
+  profile?: Profile;
+  workspaces?: Workspace[];
+}) {
   return (
     <Sidebar collapsible="icon">
       <SidebarHeader>
-        <TeamSwitcher teams={data.teams} />
+        <WorkspaceSwitcher
+          workspaces={workspaces}
+          workspace_id={profile?.workspace_id}
+        />
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={data.navMain} />
