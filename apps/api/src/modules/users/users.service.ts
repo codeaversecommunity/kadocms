@@ -1,10 +1,30 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { PrismaService } from "../../database/prisma/prisma.service";
 import { CreateUserDto, UpdateUserDto } from "./dto/user.dto";
+import { tbm_user } from "@prisma/client";
 
 @Injectable()
 export class UsersService {
   constructor(private prisma: PrismaService) {}
+
+  async findProfile(user: tbm_user) {
+    const profile = await this.prisma.tbm_user.findUnique({
+      where: { id: user.id, is_deleted: false },
+      include: {
+        workspace: {
+          include: {
+            contents: true,
+          },
+        },
+      },
+    });
+
+    if (!profile) {
+      throw new NotFoundException("User not found");
+    }
+
+    return profile;
+  }
 
   async create(createUserDto: CreateUserDto) {
     return this.prisma.tbm_user.create({

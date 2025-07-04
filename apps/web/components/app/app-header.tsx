@@ -12,19 +12,28 @@ import {
 } from "@/components/atoms/breadcrumb";
 import { Separator } from "@/components/atoms/separator";
 import { SidebarTrigger } from "@/components/atoms/sidebar";
-import { Workspace } from "@/actions/workspace";
 
 export default function AppHeader({
-  workspaces,
-  workspace_id,
+  workspace,
 }: {
-  workspaces?: Workspace[];
-  workspace_id?: string;
+  workspace?: {
+    id: string;
+    name: string;
+    slug: string;
+    status: string;
+    created_at: Date;
+    updated_at: Date;
+    is_deleted: boolean;
+    stripe_customer_id: null;
+    stripe_subscription_id: null;
+    subscription_status: string;
+    plan_type: string;
+    creator_id: string;
+    modifier_id: null;
+  };
 }) {
   const pathname = usePathname();
   const pathnames = pathname.split("/").slice(1);
-
-  const workspace = workspaces?.find((ws) => ws.id === workspace_id);
 
   return (
     <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">

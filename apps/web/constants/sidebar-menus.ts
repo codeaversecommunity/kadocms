@@ -1,17 +1,10 @@
-import {
-  BookOpen,
-  Bot,
-  Image,
-  ImagePlus,
-  List,
-  Plus,
-  Settings2,
-} from "lucide-react";
+import { Content } from "@/actions/content";
+import { ImagePlus, List, Plus } from "lucide-react";
 
 export const sidebarMenus = ({
   contents = [], // Default to an empty array if not provided
 }: {
-  contents?: any[];
+  contents?: Content[];
 }) => {
   const contentSidebars = contents?.map((content) => ({
     title: content.name,

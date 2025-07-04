@@ -149,7 +149,7 @@ export function AppSidebar({
         />
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={data.navMain} />
+        <NavMain contents={profile?.workspace?.contents} />
         <NavProjects projects={data.projects} />
       </SidebarContent>
       <SidebarFooter>

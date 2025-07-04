@@ -31,7 +31,7 @@ export default async function DashboardLayout({
     <SidebarProvider>
       <AppSidebar profile={profile} workspaces={workspaces} />
       <SidebarInset>
-        <AppHeader workspaces={workspaces} workspace_id={profile.workspace_id} />
+        <AppHeader workspace={profile?.workspace} />
         <div className="flex flex-1 flex-col gap-4 p-4 pt-0">{children}</div>
       </SidebarInset>
     </SidebarProvider>

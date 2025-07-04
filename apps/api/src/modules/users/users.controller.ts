@@ -21,7 +21,7 @@ export class UsersController {
 
   @Get("profile")
   getProfile(@CurrentUser() user: tbm_user) {
-    return user;
+    return this.usersService.findProfile(user);
   }
 
   @Get()
