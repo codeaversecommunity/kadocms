@@ -17,7 +17,7 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem,
 } from "@/components/atoms/sidebar";
-import { Content } from "@/actions/content";
+import { Content } from "@/modules/content/content.action";
 import { usePathname } from "next/navigation";
 import { sidebarMenus } from "@/constants/sidebar-menus";
 import Link from "next/link";

@@ -1,37 +1,54 @@
-import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/common';
-import { PrismaService } from '../../database/prisma/prisma.service';
-import { CreateContentDto, UpdateContentDto } from './dto/content.dto';
+import {
+  Injectable,
+  NotFoundException,
+  ForbiddenException,
+} from "@nestjs/common";
+import { PrismaService } from "../../database/prisma/prisma.service";
+import { CreateContentDto, UpdateContentDto } from "./dto/content.dto";
 
 @Injectable()
 export class ContentsService {
   constructor(private prisma: PrismaService) {}
 
-  async create(createContentDto: CreateContentDto, creatorId: string) {
+  async create({
+    createContentDto,
+    creatorId,
+    workspace_id,
+  }: {
+    createContentDto: CreateContentDto;
+    creatorId: string;
+    workspace_id: string;
+  }) {
     const { field_definitions, ...contentData } = createContentDto;
 
     // Check if user has access to workspace
     const workspace = await this.prisma.tbm_workspace.findUnique({
-      where: { id: createContentDto.workspace_id, is_deleted: false },
+      where: { id: workspace_id, is_deleted: false },
       include: {
         members: {
-          where: { user_id: creatorId, status: 'Active' },
+          where: { user_id: creatorId, status: "Active" },
         },
       },
     });
 
-    if (!workspace || (workspace.creator_id !== creatorId && workspace.members.length === 0)) {
-      throw new ForbiddenException('You do not have access to this workspace');
+    if (
+      !workspace ||
+      (workspace.creator_id !== creatorId && workspace.members.length === 0)
+    ) {
+      throw new ForbiddenException("You do not have access to this workspace");
     }
 
     return this.prisma.tbm_content.create({
       data: {
         ...contentData,
+        workspace_id,
         creator_id: creatorId,
         field_definitions: {
-          create: field_definitions?.map(field => ({
-            ...field,
-            creator_id: creatorId,
-          })) || [],
+          create:
+            field_definitions?.map((field) => ({
+              ...field,
+              creator_id: creatorId,
+            })) || [],
         },
       },
       include: {
@@ -64,13 +81,16 @@ export class ContentsService {
       where: { id: workspaceId, is_deleted: false },
       include: {
         members: {
-          where: { user_id: userId, status: 'Active' },
+          where: { user_id: userId, status: "Active" },
         },
       },
     });
 
-    if (!workspace || (workspace.creator_id !== userId && workspace.members.length === 0)) {
-      throw new ForbiddenException('You do not have access to this workspace');
+    if (
+      !workspace ||
+      (workspace.creator_id !== userId && workspace.members.length === 0)
+    ) {
+      throw new ForbiddenException("You do not have access to this workspace");
     }
 
     return this.prisma.tbm_content.findMany({
@@ -79,18 +99,18 @@ export class ContentsService {
         is_deleted: false,
       },
       include: {
-        field_definitions: {
-          where: { is_deleted: false },
-          include: {
-            relation_to_content: {
-              select: {
-                id: true,
-                name: true,
-                slug: true,
-              },
-            },
-          },
-        },
+        // field_definitions: {
+        //   where: { is_deleted: false },
+        //   include: {
+        //     relation_to_content: {
+        //       select: {
+        //         id: true,
+        //         name: true,
+        //         slug: true,
+        //       },
+        //     },
+        //   },
+        // },
         _count: {
           select: {
             entries: true,
@@ -98,7 +118,7 @@ export class ContentsService {
         },
       },
       orderBy: {
-        created_at: 'desc',
+        created_at: "desc",
       },
     });
   }
@@ -129,13 +149,13 @@ export class ContentsService {
         entries: {
           where: { is_deleted: false },
           take: 10,
-          orderBy: { created_at: 'desc' },
+          orderBy: { created_at: "desc" },
         },
       },
     });
 
     if (!content) {
-      throw new NotFoundException('Content type not found');
+      throw new NotFoundException("Content type not found");
     }
 
     // Check workspace access
@@ -143,13 +163,16 @@ export class ContentsService {
       where: { id: content.workspace_id, is_deleted: false },
       include: {
         members: {
-          where: { user_id: userId, status: 'Active' },
+          where: { user_id: userId, status: "Active" },
         },
       },
     });
 
-    if (!workspace || (workspace.creator_id !== userId && workspace.members.length === 0)) {
-      throw new ForbiddenException('You do not have access to this workspace');
+    if (
+      !workspace ||
+      (workspace.creator_id !== userId && workspace.members.length === 0)
+    ) {
+      throw new ForbiddenException("You do not have access to this workspace");
     }
 
     return content;
@@ -162,7 +185,7 @@ export class ContentsService {
     });
 
     if (!content) {
-      throw new NotFoundException('Content type not found');
+      throw new NotFoundException("Content type not found");
     }
 
     // Check workspace access
@@ -170,13 +193,16 @@ export class ContentsService {
       where: { id: content.workspace_id, is_deleted: false },
       include: {
         members: {
-          where: { user_id: userId, status: 'Active' },
+          where: { user_id: userId, status: "Active" },
         },
       },
     });
 
-    if (!workspace || (workspace.creator_id !== userId && workspace.members.length === 0)) {
-      throw new ForbiddenException('You do not have access to this workspace');
+    if (
+      !workspace ||
+      (workspace.creator_id !== userId && workspace.members.length === 0)
+    ) {
+      throw new ForbiddenException("You do not have access to this workspace");
     }
 
     const { field_definitions, ...contentData } = updateContentDto;
@@ -218,7 +244,7 @@ export class ContentsService {
     });
 
     if (!content) {
-      throw new NotFoundException('Content type not found');
+      throw new NotFoundException("Content type not found");
     }
 
     // Check workspace access
@@ -226,21 +252,24 @@ export class ContentsService {
       where: { id: content.workspace_id, is_deleted: false },
       include: {
         members: {
-          where: { user_id: userId, status: 'Active' },
+          where: { user_id: userId, status: "Active" },
         },
       },
     });
 
-    if (!workspace || (workspace.creator_id !== userId && workspace.members.length === 0)) {
-      throw new ForbiddenException('You do not have access to this workspace');
+    if (
+      !workspace ||
+      (workspace.creator_id !== userId && workspace.members.length === 0)
+    ) {
+      throw new ForbiddenException("You do not have access to this workspace");
     }
 
     return this.prisma.tbm_content.update({
       where: { id },
-      data: { 
-        is_deleted: true, 
+      data: {
+        is_deleted: true,
         modifier_id: userId,
-        updated_at: new Date() 
+        updated_at: new Date(),
       },
     });
   }

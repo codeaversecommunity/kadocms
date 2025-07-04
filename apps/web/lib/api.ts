@@ -10,13 +10,12 @@ export async function $api<T>(
 
   const config: RequestInit = {
     headers: {
+      "Content-Type": "application/json",
       ...(token && { Authorization: `Bearer ${token}` }),
       ...options.headers,
     },
     ...options,
   };
-
-  // console.log(`Making API request to ${endpoint} with options:`, config);
 
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_API_URL}${endpoint}`,

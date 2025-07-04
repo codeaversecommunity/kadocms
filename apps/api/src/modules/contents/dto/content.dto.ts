@@ -1,5 +1,5 @@
-import { IsString, IsOptional, IsArray, ValidateNested } from 'class-validator';
-import { Type } from 'class-transformer';
+import { IsString, IsOptional, IsArray, ValidateNested } from "class-validator";
+import { Type } from "class-transformer";
 
 export class ContentFieldDefinitionDto {
   @IsString()
@@ -35,9 +35,6 @@ export class CreateContentDto {
 
   @IsString()
   slug: string;
-
-  @IsString()
-  workspace_id: string;
 
   @IsArray()
   @ValidateNested({ each: true })

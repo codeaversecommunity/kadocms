@@ -12,11 +12,13 @@ export interface Content {
   is_deleted: boolean;
 }
 
-export async function getContents(workspaceId: string) {
-  return $api(`/contents?workspace_id=${workspaceId}`);
+export async function getContents() {
+  return $api(`/contents`);
 }
 
 export async function createContent(data: any) {
+  console.log("Creating content with data:", data);
+
   return $api("/contents", {
     method: "POST",
     body: JSON.stringify(data),

@@ -1,4 +1,4 @@
-import { Content } from "@/actions/content";
+import { Content } from "@/modules/content/content.action";
 import { ImagePlus, List, Plus } from "lucide-react";
 
 export const sidebarMenus = ({
