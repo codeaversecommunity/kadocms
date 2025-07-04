@@ -11,12 +11,12 @@ import {
   TableBody,
   TableCaption,
   TableCell,
-  TableFooter,
   TableHead,
   TableHeader,
   TableRow,
 } from "@/components/atoms/table";
 import { cn } from "@/lib/utils";
+import { useMediaStore } from "@/modules/media/media.store";
 
 export default function MediaDataTable() {
   const mediaStore = useMediaStore();
@@ -137,15 +137,15 @@ export default function MediaDataTable() {
           </CardContent>
         </Card>
 
-        <MediaPreview />
+        {/* <MediaPreview /> */}
       </div>
 
       {/* Dialogs */}
-      <MediaUploadDialog
+      {/* <MediaUploadDialog
         open={isUploadOpen}
         onOpenChange={setIsUploadOpen}
         onUploadComplete={handleFileUpload}
-      />
+      /> */}
     </>
   );
 }

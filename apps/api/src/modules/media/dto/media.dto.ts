@@ -38,9 +38,6 @@ export class UploadBase64Dto extends CreateMediaDto {
 }
 
 export class QueryMediaDto {
-  @IsString()
-  workspace_id: string;
-
   @IsOptional()
   @Transform(({ value }) => parseInt(value))
   @IsInt()
