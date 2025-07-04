@@ -1,0 +1,963 @@
+{
+  "info": {
+    "name": "Headless CMS API",
+    "description": "Complete API collection for the Headless CMS with Supabase authentication and Prisma ORM",
+    "version": "1.0.0",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{jwt_token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:3001",
+      "type": "string"
+    },
+    {
+      "key": "jwt_token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "workspace_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "content_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "entry_id",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Health Check",
+      "item": [
+        {
+          "name": "Get API Status",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/",
+              "host": ["{{base_url}}"],
+              "path": [""]
+            },
+            "description": "Check if the API is running"
+          },
+          "response": [
+            {
+              "name": "Success",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/",
+                  "host": ["{{base_url}}"],
+                  "path": [""]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [],
+              "body": "Headless CMS API with Supabase Auth and Prisma ORM is running!"
+            }
+          ]
+        },
+        {
+          "name": "Health Check",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/health",
+              "host": ["{{base_url}}"],
+              "path": ["health"]
+            },
+            "description": "Get detailed health status"
+          },
+          "response": [
+            {
+              "name": "Health Status",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/health",
+                  "host": ["{{base_url}}"],
+                  "path": ["health"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [],
+              "body": "{\n  \"success\": true,\n  \"data\": {\n    \"status\": \"ok\",\n    \"timestamp\": \"2024-01-01T00:00:00Z\",\n    \"service\": \"Headless CMS API\",\n    \"version\": \"1.0.0\"\n  }\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "OAuth Callback",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"access_token\": \"supabase-access-token\",\n  \"user\": {\n    \"id\": \"supabase-user-id\",\n    \"email\": \"user@example.com\",\n    \"email_confirmed_at\": \"2024-01-01T00:00:00Z\",\n    \"user_metadata\": {\n      \"full_name\": \"John Doe\",\n      \"avatar_url\": \"https://example.com/avatar.jpg\",\n      \"user_name\": \"johndoe\"\n    }\n  }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/oauth/callback",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "oauth", "callback"]
+            },
+            "description": "Handle OAuth callback from Supabase and create/update user"
+          },
+          "response": [
+            {
+              "name": "Success - New User",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"access_token\": \"supabase-access-token\",\n  \"user\": {\n    \"id\": \"supabase-user-id\",\n    \"email\": \"user@example.com\",\n    \"email_confirmed_at\": \"2024-01-01T00:00:00Z\",\n    \"user_metadata\": {\n      \"full_name\": \"John Doe\",\n      \"avatar_url\": \"https://example.com/avatar.jpg\",\n      \"user_name\": \"johndoe\"\n    }\n  }\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/auth/oauth/callback",
+                  "host": ["{{base_url}}"],
+                  "path": ["auth", "oauth", "callback"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [],
+              "body": "{\n  \"success\": true,\n  \"timestamp\": \"2024-01-01T00:00:00Z\",\n  \"data\": {\n    \"user\": {\n      \"id\": \"uuid\",\n      \"email\": \"user@example.com\",\n      \"full_name\": \"John Doe\",\n      \"username\": \"johndoe\",\n      \"avatar\": \"https://example.com/avatar.jpg\",\n      \"email_verified\": true,\n      \"workspace_id\": \"uuid\",\n      \"created_at\": \"2024-01-01T00:00:00Z\",\n      \"updated_at\": \"2024-01-01T00:00:00Z\"\n    },\n    \"token\": \"jwt-token\",\n    \"isNewUser\": true\n  }\n}"
+            }
+          ]
+        },
+        {
+          "name": "OAuth Sync",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"access_token\": \"supabase-access-token\",\n  \"user\": {\n    \"id\": \"supabase-user-id\",\n    \"email\": \"user@example.com\",\n    \"email_confirmed_at\": \"2024-01-01T00:00:00Z\",\n    \"user_metadata\": {\n      \"full_name\": \"John Doe\",\n      \"avatar_url\": \"https://example.com/avatar.jpg\",\n      \"user_name\": \"johndoe\"\n    }\n  }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/oauth/sync",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "oauth", "sync"]
+            },
+            "description": "Alternative endpoint for OAuth synchronization"
+          }
+        },
+        {
+          "name": "OAuth Callback (GET)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/auth/oauth/callback?code=oauth-code&state=oauth-state",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "oauth", "callback"],
+              "query": [
+                {
+                  "key": "code",
+                  "value": "oauth-code"
+                },
+                {
+                  "key": "state",
+                  "value": "oauth-state"
+                }
+              ]
+            },
+            "description": "Handle OAuth redirect from Supabase"
+          }
+        },
+        {
+          "name": "Refresh User Data",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"access_token\": \"supabase-access-token\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/refresh",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "refresh"]
+            },
+            "description": "Refresh user data from Supabase"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Users",
+      "item": [
+        {
+          "name": "Get Current User Profile",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/users/profile",
+              "host": ["{{base_url}}"],
+              "path": ["users", "profile"]
+            },
+            "description": "Get current authenticated user's profile"
+          },
+          "response": [
+            {
+              "name": "User Profile",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{jwt_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/users/profile",
+                  "host": ["{{base_url}}"],
+                  "path": ["users", "profile"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [],
+              "body": "{\n  \"success\": true,\n  \"timestamp\": \"2024-01-01T00:00:00Z\",\n  \"data\": {\n    \"id\": \"uuid\",\n    \"email\": \"user@example.com\",\n    \"username\": \"johndoe\",\n    \"full_name\": \"John Doe\",\n    \"avatar\": \"https://example.com/avatar.jpg\",\n    \"email_verified\": true,\n    \"workspace_id\": \"uuid\",\n    \"created_at\": \"2024-01-01T00:00:00Z\",\n    \"updated_at\": \"2024-01-01T00:00:00Z\"\n  }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Update User Profile",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"full_name\": \"John Smith\",\n  \"username\": \"johnsmith\",\n  \"avatar\": \"https://example.com/new-avatar.jpg\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/users/profile",
+              "host": ["{{base_url}}"],
+              "path": ["users", "profile"]
+            },
+            "description": "Update current user's profile"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Workspaces",
+      "item": [
+        {
+          "name": "Create Workspace",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"My Blog\",\n  \"slug\": \"my-blog\",\n  \"status\": \"Active\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/workspaces",
+              "host": ["{{base_url}}"],
+              "path": ["workspaces"]
+            },
+            "description": "Create a new workspace"
+          },
+          "response": [
+            {
+              "name": "Workspace Created",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{jwt_token}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"My Blog\",\n  \"slug\": \"my-blog\",\n  \"status\": \"Active\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/workspaces",
+                  "host": ["{{base_url}}"],
+                  "path": ["workspaces"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [],
+              "body": "{\n  \"success\": true,\n  \"timestamp\": \"2024-01-01T00:00:00Z\",\n  \"data\": {\n    \"id\": \"uuid\",\n    \"name\": \"My Blog\",\n    \"slug\": \"my-blog\",\n    \"status\": \"Active\",\n    \"creator_id\": \"uuid\",\n    \"created_at\": \"2024-01-01T00:00:00Z\",\n    \"creator\": {\n      \"id\": \"uuid\",\n      \"email\": \"user@example.com\",\n      \"full_name\": \"John Doe\"\n    }\n  }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get Workspaces",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/workspaces?page=1&limit=10&search=&sortBy=created_at&sortOrder=desc",
+              "host": ["{{base_url}}"],
+              "path": ["workspaces"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": "Page number (default: 1)"
+                },
+                {
+                  "key": "limit",
+                  "value": "10",
+                  "description": "Items per page (default: 10, max: 100)"
+                },
+                {
+                  "key": "search",
+                  "value": "",
+                  "description": "Search term for name/slug"
+                },
+                {
+                  "key": "sortBy",
+                  "value": "created_at",
+                  "description": "Sort field (default: created_at)"
+                },
+                {
+                  "key": "sortOrder",
+                  "value": "desc",
+                  "description": "Sort order: asc|desc (default: desc)"
+                }
+              ]
+            },
+            "description": "Get user's workspaces with pagination and search"
+          },
+          "response": [
+            {
+              "name": "Workspaces List",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{jwt_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/workspaces?page=1&limit=10",
+                  "host": ["{{base_url}}"],
+                  "path": ["workspaces"],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "10"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [],
+              "body": "{\n  \"success\": true,\n  \"timestamp\": \"2024-01-01T00:00:00Z\",\n  \"data\": [\n    {\n      \"id\": \"uuid\",\n      \"name\": \"My Blog\",\n      \"slug\": \"my-blog\",\n      \"status\": \"Active\",\n      \"created_at\": \"2024-01-01T00:00:00Z\",\n      \"creator\": {\n        \"id\": \"uuid\",\n        \"email\": \"user@example.com\",\n        \"full_name\": \"John Doe\"\n      },\n      \"_count\": {\n        \"members\": 1,\n        \"contents\": 3\n      }\n    }\n  ],\n  \"meta\": {\n    \"total\": 25,\n    \"page\": 1,\n    \"limit\": 10,\n    \"totalPages\": 3,\n    \"hasNext\": true,\n    \"hasPrev\": false\n  }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get Workspace Details",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/workspaces/{{workspace_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["workspaces", "{{workspace_id}}"]
+            },
+            "description": "Get detailed workspace information"
+          }
+        },
+        {
+          "name": "Update Workspace",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Updated Blog Name\",\n  \"status\": \"Active\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/workspaces/{{workspace_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["workspaces", "{{workspace_id}}"]
+            },
+            "description": "Update workspace details"
+          }
+        },
+        {
+          "name": "Delete Workspace",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/workspaces/{{workspace_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["workspaces", "{{workspace_id}}"]
+            },
+            "description": "Soft delete a workspace"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Content Types",
+      "item": [
+        {
+          "name": "Create Content Type",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Blog Post\",\n  \"slug\": \"blog-post\",\n  \"workspace_id\": \"{{workspace_id}}\",\n  \"field_definitions\": [\n    {\n      \"name\": \"title\",\n      \"display_name\": \"Title\",\n      \"type\": \"TEXT\",\n      \"required\": true,\n      \"placeholder\": \"Enter post title\"\n    },\n    {\n      \"name\": \"content\",\n      \"display_name\": \"Content\",\n      \"type\": \"RICH_TEXT\",\n      \"required\": true\n    },\n    {\n      \"name\": \"author\",\n      \"display_name\": \"Author\",\n      \"type\": \"RELATION\",\n      \"relation_to_content_id\": \"author-content-id\",\n      \"required\": true\n    },\n    {\n      \"name\": \"tags\",\n      \"display_name\": \"Tags\",\n      \"type\": \"RELATION\",\n      \"relation_to_content_id\": \"tag-content-id\",\n      \"multiple\": true\n    }\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/contents",
+              "host": ["{{base_url}}"],
+              "path": ["contents"]
+            },
+            "description": "Create a new content type with field definitions"
+          },
+          "response": [
+            {
+              "name": "Content Type Created",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{jwt_token}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"Blog Post\",\n  \"slug\": \"blog-post\",\n  \"workspace_id\": \"{{workspace_id}}\",\n  \"field_definitions\": [\n    {\n      \"name\": \"title\",\n      \"display_name\": \"Title\",\n      \"type\": \"TEXT\",\n      \"required\": true\n    }\n  ]\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/contents",
+                  "host": ["{{base_url}}"],
+                  "path": ["contents"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [],
+              "body": "{\n  \"success\": true,\n  \"timestamp\": \"2024-01-01T00:00:00Z\",\n  \"data\": {\n    \"id\": \"uuid\",\n    \"name\": \"Blog Post\",\n    \"slug\": \"blog-post\",\n    \"workspace_id\": \"uuid\",\n    \"created_at\": \"2024-01-01T00:00:00Z\",\n    \"field_definitions\": [\n      {\n        \"id\": \"uuid\",\n        \"name\": \"title\",\n        \"display_name\": \"Title\",\n        \"type\": \"TEXT\",\n        \"required\": true,\n        \"multiple\": false,\n        \"placeholder\": \"Enter post title\",\n        \"relation_to_content\": null\n      }\n    ],\n    \"workspace\": {\n      \"id\": \"uuid\",\n      \"name\": \"My Blog\",\n      \"slug\": \"my-blog\"\n    }\n  }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get Content Types",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/contents?workspace_id={{workspace_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["contents"],
+              "query": [
+                {
+                  "key": "workspace_id",
+                  "value": "{{workspace_id}}",
+                  "description": "Required - Workspace UUID"
+                }
+              ]
+            },
+            "description": "Get content types for a workspace"
+          }
+        },
+        {
+          "name": "Get Content Type Details",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/contents/{{content_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["contents", "{{content_id}}"]
+            },
+            "description": "Get detailed content type information"
+          }
+        },
+        {
+          "name": "Update Content Type",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Updated Blog Post\",\n  \"slug\": \"updated-blog-post\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/contents/{{content_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["contents", "{{content_id}}"]
+            },
+            "description": "Update content type details"
+          }
+        },
+        {
+          "name": "Delete Content Type",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/contents/{{content_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["contents", "{{content_id}}"]
+            },
+            "description": "Soft delete a content type"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Content Entries",
+      "item": [
+        {
+          "name": "Create Content Entry",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"content_id\": \"{{content_id}}\",\n  \"data\": {\n    \"title\": \"My First Blog Post\",\n    \"content\": \"<p>This is the content of my blog post.</p>\",\n    \"author\": \"author-entry-id\",\n    \"tags\": [\"tag-entry-id-1\", \"tag-entry-id-2\"],\n    \"published\": true,\n    \"publish_date\": \"2024-01-01T00:00:00Z\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/content-entries",
+              "host": ["{{base_url}}"],
+              "path": ["content-entries"]
+            },
+            "description": "Create a new content entry"
+          },
+          "response": [
+            {
+              "name": "Content Entry Created",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{jwt_token}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"content_id\": \"{{content_id}}\",\n  \"data\": {\n    \"title\": \"My First Blog Post\",\n    \"content\": \"<p>This is the content of my blog post.</p>\"\n  }\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/content-entries",
+                  "host": ["{{base_url}}"],
+                  "path": ["content-entries"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [],
+              "body": "{\n  \"success\": true,\n  \"timestamp\": \"2024-01-01T00:00:00Z\",\n  \"data\": {\n    \"id\": \"uuid\",\n    \"content_id\": \"uuid\",\n    \"data\": {\n      \"title\": \"My First Blog Post\",\n      \"content\": \"<p>This is the content of my blog post.</p>\",\n      \"published\": true\n    },\n    \"created_at\": \"2024-01-01T00:00:00Z\",\n    \"updated_at\": \"2024-01-01T00:00:00Z\",\n    \"content\": {\n      \"id\": \"uuid\",\n      \"name\": \"Blog Post\",\n      \"slug\": \"blog-post\"\n    },\n    \"creator\": {\n      \"id\": \"uuid\",\n      \"email\": \"user@example.com\",\n      \"full_name\": \"John Doe\"\n    }\n  }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get Content Entries",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/content-entries?content_id={{content_id}}&page=1&limit=10&sort=created_at&order=desc",
+              "host": ["{{base_url}}"],
+              "path": ["content-entries"],
+              "query": [
+                {
+                  "key": "content_id",
+                  "value": "{{content_id}}",
+                  "description": "Filter by content type"
+                },
+                {
+                  "key": "workspace_id",
+                  "value": "{{workspace_id}}",
+                  "description": "Filter by workspace",
+                  "disabled": true
+                },
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": "Page number (default: 1)"
+                },
+                {
+                  "key": "limit",
+                  "value": "10",
+                  "description": "Items per page (default: 10)"
+                },
+                {
+                  "key": "sort",
+                  "value": "created_at",
+                  "description": "Sort field (default: created_at)"
+                },
+                {
+                  "key": "order",
+                  "value": "desc",
+                  "description": "Sort order: asc|desc (default: desc)"
+                }
+              ]
+            },
+            "description": "Get content entries with filtering and pagination"
+          }
+        },
+        {
+          "name": "Get Content Entry",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/content-entries/{{entry_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["content-entries", "{{entry_id}}"]
+            },
+            "description": "Get a single content entry"
+          }
+        },
+        {
+          "name": "Update Content Entry",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"data\": {\n    \"title\": \"Updated Blog Post Title\",\n    \"published\": false\n  }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/content-entries/{{entry_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["content-entries", "{{entry_id}}"]
+            },
+            "description": "Update a content entry"
+          }
+        },
+        {
+          "name": "Delete Content Entry",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/content-entries/{{entry_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["content-entries", "{{entry_id}}"]
+            },
+            "description": "Soft delete a content entry"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Public API",
+      "item": [
+        {
+          "name": "Get Public Content Entries",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/my-blog/blog-post?page=1&limit=10&sort=created_at&order=desc",
+              "host": ["{{base_url}}"],
+              "path": ["api", "my-blog", "blog-post"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": "Page number (default: 1)"
+                },
+                {
+                  "key": "limit",
+                  "value": "10",
+                  "description": "Items per page (default: 10, max: 100)"
+                },
+                {
+                  "key": "sort",
+                  "value": "created_at",
+                  "description": "Sort field (default: created_at)"
+                },
+                {
+                  "key": "order",
+                  "value": "desc",
+                  "description": "Sort order: asc|desc (default: desc)"
+                }
+              ]
+            },
+            "description": "Get public content entries (no authentication required)"
+          },
+          "response": [
+            {
+              "name": "Public Entries",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/my-blog/blog-post?page=1&limit=10",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "my-blog", "blog-post"],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "10"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [],
+              "body": "{\n  \"success\": true,\n  \"timestamp\": \"2024-01-01T00:00:00Z\",\n  \"data\": [\n    {\n      \"id\": \"uuid\",\n      \"content_id\": \"uuid\",\n      \"data\": {\n        \"title\": \"My Blog Post\",\n        \"content\": \"<p>Content here</p>\",\n        \"author\": {\n          \"id\": \"author-entry-id\",\n          \"content_id\": \"author-content-id\",\n          \"data\": {\n            \"name\": \"John Doe\",\n            \"email\": \"john@example.com\",\n            \"bio\": \"Author bio\"\n          },\n          \"created_at\": \"2024-01-01T00:00:00Z\"\n        },\n        \"tags\": [\n          {\n            \"id\": \"tag-entry-id\",\n            \"data\": {\n              \"name\": \"Technology\",\n              \"slug\": \"technology\"\n            }\n          }\n        ]\n      },\n      \"created_at\": \"2024-01-01T00:00:00Z\",\n      \"updated_at\": \"2024-01-01T00:00:00Z\"\n    }\n  ],\n  \"meta\": {\n    \"content\": {\n      \"id\": \"uuid\",\n      \"name\": \"Blog Post\",\n      \"slug\": \"blog-post\"\n    },\n    \"workspace\": {\n      \"id\": \"uuid\",\n      \"name\": \"My Blog\",\n      \"slug\": \"my-blog\"\n    },\n    \"pagination\": {\n      \"page\": 1,\n      \"limit\": 10,\n      \"total\": 25,\n      \"pages\": 3\n    },\n    \"schema\": [\n      {\n        \"name\": \"title\",\n        \"display_name\": \"Title\",\n        \"type\": \"TEXT\",\n        \"required\": true,\n        \"multiple\": false,\n        \"relation_to_content\": null\n      }\n    ]\n  }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get Single Public Entry",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/my-blog/blog-post/{{entry_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "my-blog", "blog-post", "{{entry_id}}"]
+            },
+            "description": "Get a single public content entry (no authentication required)"
+          }
+        }
+      ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// Auto-set base URL based on environment",
+          "if (!pm.environment.get('base_url')) {",
+          "    pm.environment.set('base_url', 'http://localhost:3001');",
+          "}"
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// Auto-extract JWT token from OAuth callback response",
+          "if (pm.response.json() && pm.response.json().data && pm.response.json().data.token) {",
+          "    pm.environment.set('jwt_token', pm.response.json().data.token);",
+          "    console.log('JWT token saved to environment');",
+          "}",
+          "",
+          "// Auto-extract workspace ID from workspace creation response",
+          "if (pm.response.json() && pm.response.json().data && pm.response.json().data.id && pm.request.url.path.includes('workspaces')) {",
+          "    pm.environment.set('workspace_id', pm.response.json().data.id);",
+          "    console.log('Workspace ID saved to environment');",
+          "}",
+          "",
+          "// Auto-extract content ID from content creation response",
+          "if (pm.response.json() && pm.response.json().data && pm.response.json().data.id && pm.request.url.path.includes('contents')) {",
+          "    pm.environment.set('content_id', pm.response.json().data.id);",
+          "    console.log('Content ID saved to environment');",
+          "}",
+          "",
+          "// Auto-extract entry ID from entry creation response",
+          "if (pm.response.json() && pm.response.json().data && pm.response.json().data.id && pm.request.url.path.includes('content-entries')) {",
+          "    pm.environment.set('entry_id', pm.response.json().data.id);",
+          "    console.log('Entry ID saved to environment');",
+          "}"
+        ]
+      }
+    }
+  ]
+}

@@ -18,7 +18,7 @@ export class AuthController {
   @Post("oauth/sync")
   @Public()
   async oauthSync(@Body() callbackDto: OAuthCallbackDto) {
-    // Alias for callback - some frontends might use different endpoint names
+    // Alias for callback - some front ends might use different endpoint names
     return this.authService.handleOAuthCallback(callbackDto);
   }
 
