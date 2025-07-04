@@ -16,7 +16,8 @@
     "prisma:migrate:deploy": "turbo run prisma:migrate:deploy",
     "prisma:migrate:dev": "turbo run prisma:migrate:dev",
     "prisma:push": "turbo run prisma:push",
-    "prisma:seed": "turbo run prisma:seed"
+    "prisma:seed": "turbo run prisma:seed",
+    "prisma:studio": "turbo run prisma:studio"
   },
   "devDependencies": {
     "prettier": "^3.2.5",

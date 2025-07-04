@@ -25,6 +25,7 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/atoms/sidebar";
+import { supabaseLogout } from "@/lib/supabase/actions";
 
 export function NavUser({
   user,
@@ -98,7 +99,7 @@ export function NavUser({
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
+            <DropdownMenuItem onClick={() => supabaseLogout()}>
               <LogOut />
               Log out
             </DropdownMenuItem>
