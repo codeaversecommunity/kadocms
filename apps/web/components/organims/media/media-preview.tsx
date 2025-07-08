@@ -73,7 +73,7 @@ export default function MediaPreview() {
   };
 
   return (
-    <Card className="py-0 overflow-y-auto h-[80vh]">
+    <Card className="py-0 sticky top-5">
       {!media ? (
         <CardContent className="flex items-center justify-center h-full">
           <div className="text-muted-foreground text-sm">

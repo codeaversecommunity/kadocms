@@ -7,6 +7,7 @@ export const sidebarMenus = ({
   contents?: Content[];
 }) => {
   const contentSidebars = contents?.map((content) => ({
+    id: content.id, // Add unique ID for React keys
     title: content.name,
     url: `/dashboard/apis/${content.slug}`,
     icon: List, // Assuming content has an icon property

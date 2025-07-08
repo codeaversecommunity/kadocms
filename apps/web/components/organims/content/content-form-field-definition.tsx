@@ -34,7 +34,7 @@ export default function ContentFormFieldDefinition({
         </div>
 
         {contentStore.form.field_definitions?.map((field, index) => (
-          <div>
+          <div key={index}>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <div className="mb-5">
                 <Label htmlFor="field-id" className="mb-2">

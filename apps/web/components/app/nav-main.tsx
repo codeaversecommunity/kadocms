@@ -62,7 +62,7 @@ export function NavMain({ contents }: { contents?: Content[] }) {
             {items.map((item) =>
               item.items ? (
                 <Collapsible
-                  key={item.title}
+                  key={item.id || item.title}
                   asChild
                   className="group/collapsible"
                   defaultOpen={item.items.some((sub: any) => isActive(sub.url))}
@@ -81,7 +81,7 @@ export function NavMain({ contents }: { contents?: Content[] }) {
                     <CollapsibleContent>
                       <SidebarMenuSub>
                         {item.items.map((subItem: any) => (
-                          <SidebarMenuSubItem key={subItem.title}>
+                          <SidebarMenuSubItem key={subItem.id || subItem.title}>
                             <SidebarMenuSubButton
                               asChild
                               className={cn(
@@ -101,7 +101,7 @@ export function NavMain({ contents }: { contents?: Content[] }) {
                   </SidebarMenuItem>
                 </Collapsible>
               ) : (
-                <SidebarMenuItem key={item.title}>
+                <SidebarMenuItem key={item.id || item.title}>
                   <Link href={String(item.url)}>
                     <SidebarMenuButton
                       tooltip={item.title}
