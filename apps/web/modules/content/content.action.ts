@@ -1,3 +1,5 @@
+"use server";
+
 import { $api } from "@/lib/api";
 
 export interface Content {
@@ -17,15 +19,13 @@ export async function getContents() {
 }
 
 export async function createContent(data: any) {
-  console.log("Creating content with data:", data);
-
   return $api("/contents", {
     method: "POST",
     body: JSON.stringify(data),
   });
 }
 
-export async function getContent(id: string) {
+export async function getContent(id: string): Promise<Content> {
   return $api(`/contents/${id}`);
 }
 

@@ -124,8 +124,11 @@ export class ContentsService {
   }
 
   async findOne(id: string, userId: string) {
-    const content = await this.prisma.tbm_content.findUnique({
-      where: { id, is_deleted: false },
+    const content = await this.prisma.tbm_content.findFirst({
+      where: {
+        OR: [{ id }, { slug: id }],
+        is_deleted: false,
+      },
       include: {
         field_definitions: {
           where: { is_deleted: false },

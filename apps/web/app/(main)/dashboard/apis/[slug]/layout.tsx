@@ -1,18 +1,19 @@
-"use client";
-
-import { Settings } from "lucide-react";
-import Link from "next/link";
-import React from "react";
-import { Button } from "@/components/atoms/button";
 import { Separator } from "@/components/atoms/separator";
-import { useContentStore } from "@/modules/content/content.store";
+import { getContent } from "@/modules/content/content.action";
+import { Button } from "@/components/atoms/button";
+import { Settings } from "lucide-react";
 
-export default function ContentLayout({
+import Link from "next/link";
+
+export default async function ContentApiLayout({
   children,
+  params,
 }: {
   children: React.ReactNode;
+  params: Promise<{ slug: string }>;
 }) {
-  const contentStore = useContentStore();
+  const { slug } = await params;
+  const content = await getContent(slug);
 
   return (
     <>
@@ -20,26 +21,25 @@ export default function ContentLayout({
         <div>
           <Link
             className="text-xl font-medium"
-            href={`/dashboard/apis/${contentStore.report?.slug}`}
+            href={`/dashboard/apis/${content?.slug}`}
           >
-            {contentStore.report?.name || "Content"}
+            {content?.name || "Content"}
           </Link>
 
           <p className="text-sm text-muted-foreground">
-            Manage your content files and data for{" "}
-            {contentStore.report?.name || "Content"}.
+            Manage your content files and data for {content?.name || "Content"}.
           </p>
         </div>
 
-        <Link href={`/dashboard/apis/${contentStore.report?.slug}/settings`}>
+        <Link href={`/dashboard/apis/${content?.slug}/settings`}>
           <Button variant="ghost" size="sm">
             <Settings className="h-4 w-4 mr-2" />
             Settings
           </Button>
         </Link>
       </div>
-      <Separator />
 
+      <Separator />
       {children}
     </>
   );
