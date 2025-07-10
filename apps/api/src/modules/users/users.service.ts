@@ -13,7 +13,9 @@ export class UsersService {
       include: {
         workspace: {
           include: {
-            contents: true,
+            contents: {
+              where: { is_deleted: false },
+            },
           },
         },
       },
