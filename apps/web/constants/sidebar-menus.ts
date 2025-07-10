@@ -11,6 +11,7 @@ export const sidebarMenus = ({
     title: content.name,
     url: `/dashboard/apis/${content.slug}`,
     icon: List, // Assuming content has an icon property
+    is_content: true,
   }));
 
   return [

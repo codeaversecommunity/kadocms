@@ -20,7 +20,7 @@ import {
 } from "@/components/atoms/sidebar";
 import { Workspace } from "@/actions/workspace";
 
-export function WorkspaceSwitcher({
+export function AppSidebarWorkspace({
   workspaces = [],
   workspace_id = "",
 }: {

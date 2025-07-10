@@ -28,7 +28,7 @@ import {
 import { supabaseLogout } from "@/lib/supabase/actions";
 import { Profile } from "@/actions/user";
 
-export function NavUser({ user }: { user?: Profile }) {
+export function AppSidebarUser({ user }: { user?: Profile }) {
   const { isMobile } = useSidebar();
 
   return (

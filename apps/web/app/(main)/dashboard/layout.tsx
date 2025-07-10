@@ -3,21 +3,8 @@
 import { getProfile } from "@/actions/user";
 import { getWorkspaces } from "@/actions/workspace";
 import AppHeader from "@/components/app/app-header";
-import { AppSidebar } from "@/components/app/app-sidebar";
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/components/atoms/breadcrumb";
-import { Separator } from "@/components/atoms/separator";
-import {
-  SidebarInset,
-  SidebarProvider,
-  SidebarTrigger,
-} from "@/components/atoms/sidebar";
+import { AppSidebar } from "@/components/app/sidebar/app-sidebar";
+import { SidebarInset, SidebarProvider } from "@/components/atoms/sidebar";
 
 export default async function DashboardLayout({
   children,
