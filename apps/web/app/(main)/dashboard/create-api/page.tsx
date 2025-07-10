@@ -1,7 +1,7 @@
 "use client";
 
-import ContentFormFieldDefinition from "@/components/organims/content/content-form-field-definition";
-import ContentFormInformation from "@/components/organims/content/content-form-information";
+import ContentFormFieldDefinition from "@/components/organisms/content/content-form-field-definition";
+import ContentFormInformation from "@/components/organisms/content/content-form-information";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useContentStore } from "@/modules/content/content.store";
 

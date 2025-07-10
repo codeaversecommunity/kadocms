@@ -1,18 +1,7 @@
 "use server";
 
 import { $api } from "@/lib/api";
-
-export interface Content {
-  id: string;
-  name: string;
-  slug: string;
-  workspace_id: string;
-  creator_id: string;
-  modifier_id: null;
-  created_at: Date;
-  updated_at: Date;
-  is_deleted: boolean;
-}
+import { Content } from "./content.type";
 
 export async function getContents() {
   return $api(`/contents`);

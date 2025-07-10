@@ -1,4 +1,5 @@
-// import ContentDataTable from "~/components/organisms/content/content-data-table";
+import ContentDataTable from "@/components/organisms/content/data-table/content-data-table";
+import { getContent } from "@/modules/content/content.action";
 
 export default async function ContentPage({
   params,
@@ -6,14 +7,11 @@ export default async function ContentPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-
-  //   return <ContentDataTable objectTypeId={slug} />;
+  const content = await getContent(slug);
 
   return (
     <>
-      Lorem ipsum dolor sit, amet consectetur adipisicing elit. Minus tempora
-      molestiae tenetur laborum? Quia, laboriosam enim? Ducimus, cumque minus
-      iure sunt sequi culpa, eum ipsum aut cum quam alias sint.
+      <ContentDataTable content={content} />
     </>
   );
 }

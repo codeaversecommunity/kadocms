@@ -1,4 +1,5 @@
-import ContentSettingBasicInformation from "@/components/organims/content/settings/content-setting-basic-information";
+import ContentSettingApiSchema from "@/components/organisms/content/settings/content-setting-api-schema";
+import ContentSettingBasicInformation from "@/components/organisms/content/settings/content-setting-basic-information";
 import { getContent } from "@/modules/content/content.action";
 import { Suspense } from "react";
 // import ContentSettingBasicInformation from "~/components/organisms/content/settings/content-setting-basic-information";
@@ -31,9 +32,9 @@ export default async function ContentSettingsPage({
           <ContentSettingBasicInformation content={content} />
         )}
 
-        {/* {activeTab === "api-schema" && (
-          <ContentSettingApiSchema contentId={slug} />
-        )} */}
+        {activeTab === "api-schema" && (
+          <ContentSettingApiSchema content={content} />
+        )}
       </Suspense>
     </div>
   );

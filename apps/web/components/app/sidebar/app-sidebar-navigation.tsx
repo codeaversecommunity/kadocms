@@ -5,7 +5,6 @@ import {
   SidebarGroupLabel,
   SidebarMenu,
 } from "@/components/atoms/sidebar";
-import { Content } from "@/modules/content/content.action";
 import { usePathname } from "next/navigation";
 import { sidebarMenus } from "@/constants/sidebar-menus";
 import { AppSidebarNavigationItemDropdown } from "./app-sidebar-navigation-item-dropdown";
@@ -57,7 +56,7 @@ function renderSidebarMenuItem(item: any, isActive: (url: string) => boolean) {
   );
 }
 
-export function AppSidebarNavigation({ contents }: { contents?: Content[] }) {
+export function AppSidebarNavigation({ contents }: { contents?: any[] }) {
   const pathname = usePathname();
   const groupedMenus = groupSidebarMenus(sidebarMenus({ contents }));
 
