@@ -1,5 +1,5 @@
-import { initializeAuth } from "@/actions/auth";
 import { createSupabaseServer } from "@/lib/supabase/server";
+import { initializeAuth } from "@/modules/auth/auth.action";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest) {
