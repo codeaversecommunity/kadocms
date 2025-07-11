@@ -7,7 +7,14 @@ export async function getContents() {
   return $api(`/contents`);
 }
 
-export async function createContent(data: any) {
+export async function validateSlugContent(id: string): Promise<{
+  exists: boolean;
+  message: string;
+}> {
+  return $api(`/contents/validate/${id}`);
+}
+
+export async function createContent(data: any): Promise<Content> {
   return $api("/contents", {
     method: "POST",
     body: JSON.stringify(data),

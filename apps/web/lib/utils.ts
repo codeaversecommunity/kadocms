@@ -24,3 +24,12 @@ export const formatDate = (dateString: string | Date) => {
     minute: "2-digit",
   });
 };
+
+export const formatSlug = (value: string) => {
+  return value
+    .toLowerCase()
+    .replace(/\s+/g, "-") // Replace spaces with hyphens
+    .replace(/[^a-z0-9-]/g, "") // Remove non-alphanumeric characters except hyphens
+    .replace(/--+/g, "-") // Replace multiple hyphens with a single hyphen
+    .replace(/^-+|-+$/g, ""); // Trim leading/trailing hyphens
+};

@@ -99,9 +99,6 @@ export default function ContentDataTable({ content }: { content: Content }) {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead className="w-20 sticky left-0 bg-background z-10">
-                    Status
-                  </TableHead>
                   {visibleFields.map((field) => (
                     <TableHead
                       key={field.id}
@@ -135,14 +132,6 @@ export default function ContentDataTable({ content }: { content: Content }) {
                 ) : (
                   content.entries.map((entry) => (
                     <TableRow key={entry.id} className="hover:bg-muted/50">
-                      <TableCell className="sticky left-0 bg-background z-10">
-                        <div className="flex items-center gap-2">
-                          <div className="w-2 h-2 bg-green-500 rounded-full" />
-                          <span className="text-xs text-green-600">
-                            Published
-                          </span>
-                        </div>
-                      </TableCell>
                       {visibleFields.map((field) => (
                         <TableCell key={field.id} className="align-top py-3">
                           <ContentDataTableCell

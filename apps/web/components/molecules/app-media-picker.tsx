@@ -97,7 +97,7 @@ export default function AppMediaPicker({
 
   function mockMedia(url: string): tbm_media {
     return {
-      id: "temp",
+      id: `temp-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
       name: "Selected Image",
       file_path: url,
       media_type: "image/*",
@@ -157,28 +157,26 @@ export default function AppMediaPicker({
     <>
       {multiple ? (
         <div className="space-y-3">
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+          <div className="flex flex-wrap gap-3">
             {displayValue.map((media, i) => (
-              <Card key={media.id || i} className="relative group">
-                <CardContent className="p-2">
-                  <div className="aspect-square bg-muted rounded-lg overflow-hidden relative">
-                    <Image
-                      src={media.file_path}
-                      alt={media.alt_text || media.name}
-                      fill
-                      className="object-cover"
-                    />
-                    <Button
-                      variant="destructive"
-                      size="sm"
-                      onClick={() => handleRemove(i)}
-                      className="absolute top-1 right-1 h-6 w-6 p-0 opacity-0 group-hover:opacity-100"
-                    >
-                      <X className="h-3 w-3" />
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
+              <div key={media.id || i} className="relative group">
+                <div className="w-24 h-2w-24 aspect-square rounded-lg overflow-hidden relative bg-gray-100">
+                  <Image
+                    src={media.file_path}
+                    alt={media.alt_text || media.name}
+                    fill
+                    className="object-contain"
+                  />
+                  <Button
+                    variant="destructive"
+                    size="sm"
+                    onClick={() => handleRemove(i)}
+                    className="absolute top-1 right-1 h-6 w-6 p-0 opacity-0 group-hover:opacity-100"
+                  >
+                    <X className="h-3 w-3" />
+                  </Button>
+                </div>
+              </div>
             ))}
           </div>
           <Button
@@ -252,7 +250,7 @@ export default function AppMediaPicker({
       )}
 
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-        <DialogContent className="max-w-6xl max-h-[90vh] flex flex-col">
+        <DialogContent className="w-full max-w-7xl max-h-[90vh] flex flex-col">
           <DialogHeader>
             <DialogTitle>Select Media</DialogTitle>
             <DialogDescription>

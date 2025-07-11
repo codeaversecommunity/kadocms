@@ -10,6 +10,22 @@ import { CreateContentDto, UpdateContentDto } from "./dto/content.dto";
 export class ContentsService {
   constructor(private prisma: PrismaService) {}
 
+  async validateSlug(slug: string) {
+    const content = await this.prisma.tbm_content.findFirst({
+      where: {
+        OR: [{ id: slug }, { slug: slug }],
+        is_deleted: false,
+      },
+    });
+
+    return {
+      exists: !!content,
+      message: content
+        ? "Content type with this slug already exists"
+        : "Slug is available",
+    };
+  }
+
   async create({
     createContentDto,
     creatorId,

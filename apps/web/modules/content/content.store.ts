@@ -29,12 +29,7 @@ type Type = {
   ) => void;
   handleAddField: () => void;
   handleRemoveField: (index: number) => void;
-
-  report: any | null;
-
-  // Actions
-  create: () => Promise<boolean>;
-  getReport: (id: string) => Promise<any>;
+  resetForm: () => void;
 };
 
 const defaultField = {
@@ -110,42 +105,8 @@ export const useContentStore = create<Type>()(
         }));
       },
 
-      // Actions
-      create: async () => {
-        set({ loading_form: true });
-        try {
-          const { form } = get();
-          console.log("Creating content with form data:", form);
-
-          const response = await createContent(form);
-
-          toast.success("Content created successfully!");
-          set({ form: resetForm() });
-
-          return true;
-        } catch (error: any) {
-          toast.error(error.message || "Failed to create content");
-          return false;
-        } finally {
-          set({ loading_form: false });
-        }
-      },
-
-      getReport: async (id: string) => {
-        try {
-          const response = await fetch(`/contents/${id}`);
-          const data = await response.json();
-          if (!data.success) {
-            throw new Error(data.error || "Failed to fetch content");
-          }
-
-          console.log("Fetched report data:", data);
-
-          set({ report: data.data });
-        } catch (error: any) {
-          toast.error(error.message || "Failed to fetch content");
-          return null;
-        }
+      resetForm: () => {
+        set({ form: resetForm() });
       },
     }),
     {

@@ -20,14 +20,17 @@ import { tbm_user } from "@prisma/client";
 export class ContentsController {
   constructor(private readonly contentsService: ContentsService) {}
 
+  @Get("validate/:id")
+  validateSlug(@Param("id") id: string) {
+    return this.contentsService.validateSlug(id);
+  }
+
   @Post()
   create(
     @Body() createContentDto: CreateContentDto,
     @CurrentUser() user: tbm_user
   ) {
     const workspaceId = String(user.workspace_id);
-
-    console.log("Creating content with DTO:", createContentDto, workspaceId);
 
     return this.contentsService.create({
       createContentDto,
