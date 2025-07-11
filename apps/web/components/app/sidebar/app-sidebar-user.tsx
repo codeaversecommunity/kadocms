@@ -26,7 +26,7 @@ import {
   useSidebar,
 } from "@/components/atoms/sidebar";
 import { supabaseLogout } from "@/lib/supabase/actions";
-import { Profile } from "@/actions/user";
+import { Profile } from "@/modules/user/user.action";
 
 export function AppSidebarUser({ user }: { user?: Profile }) {
   const { isMobile } = useSidebar();

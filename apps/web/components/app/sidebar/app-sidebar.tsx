@@ -5,8 +5,8 @@ import {
   SidebarHeader,
   SidebarRail,
 } from "@/components/atoms/sidebar";
-import { Profile } from "@/actions/user";
-import { Workspace } from "@/actions/workspace";
+import { Profile } from "@/modules/user/user.action";
+import { Workspace } from "@/modules/workspace/workspace.actions";
 import { AppSidebarUser } from "./app-sidebar-user";
 import { AppSidebarWorkspace } from "./app-sidebar-workspace";
 import { AppSidebarNavigation } from "./app-sidebar-navigation";

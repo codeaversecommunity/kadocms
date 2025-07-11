@@ -18,7 +18,7 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/atoms/sidebar";
-import { Workspace } from "@/actions/workspace";
+import { Workspace } from "@/modules/workspace/workspace.actions";
 
 export function AppSidebarWorkspace({
   workspaces = [],

@@ -1,7 +1,7 @@
 "use server";
 
-import { getProfile } from "@/actions/user";
-import { getWorkspaces } from "@/actions/workspace";
+import { getProfile } from "@/modules/user/user.action";
+import { getWorkspaces } from "@/modules/workspace/workspace.actions";
 import AppHeader from "@/components/app/app-header";
 import { AppSidebar } from "@/components/app/sidebar/app-sidebar";
 import { SidebarInset, SidebarProvider } from "@/components/atoms/sidebar";

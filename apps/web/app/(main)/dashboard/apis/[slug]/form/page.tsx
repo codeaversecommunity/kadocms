@@ -1,3 +1,5 @@
+import ContentEntryForm from "@/components/organisms/content/content-entry-form";
+import { getContent } from "@/modules/content/content.action";
 import { Suspense } from "react";
 // import ContentEntryForm from "~/components/organisms/content/content-entry-form";
 
@@ -7,18 +9,12 @@ export default async function CreateEntryPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
+  const content = await getContent(slug);
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold">Create New Entry</h1>
-        <p className="text-muted-foreground">
-          Add a new entry to your content collection.
-        </p>
-      </div>
-
+    <div>
       <Suspense fallback={<div>Loading form...</div>}>
-        {/* <ContentEntryForm objectTypeId={slug} /> */}
+        <ContentEntryForm content={content} />
       </Suspense>
     </div>
   );

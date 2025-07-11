@@ -1,4 +1,4 @@
-import { IsString, IsOptional, IsObject } from 'class-validator';
+import { IsString, IsOptional, IsObject } from "class-validator";
 
 export class CreateContentEntryDto {
   @IsString()
@@ -19,10 +19,6 @@ export class QueryContentEntriesDto {
   @IsOptional()
   content_id?: string;
 
-  @IsString()
-  @IsOptional()
-  workspace_id?: string;
-
   @IsOptional()
   page?: number;
 
@@ -35,5 +31,5 @@ export class QueryContentEntriesDto {
 
   @IsString()
   @IsOptional()
-  order?: 'asc' | 'desc';
+  order?: "asc" | "desc";
 }
