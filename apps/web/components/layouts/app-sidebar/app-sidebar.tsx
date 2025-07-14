@@ -7,9 +7,9 @@ import {
 } from "@/components/atoms/sidebar";
 import { Profile } from "@/modules/user/user.action";
 import { Workspace } from "@/modules/workspace/workspace.actions";
-import { AppSidebarUser } from "./app-sidebar-user";
 import { AppSidebarWorkspace } from "./app-sidebar-workspace";
 import { AppSidebarNavigation } from "./app-sidebar-navigation";
+import { AppSidebarUser } from "./app-sidebar-user";
 
 export function AppSidebar({
   profile,
@@ -19,7 +19,7 @@ export function AppSidebar({
   workspaces?: Workspace[];
 }) {
   return (
-    <Sidebar collapsible="icon">
+    <Sidebar collapsible="icon" variant="floating">
       <SidebarHeader>
         <AppSidebarWorkspace
           workspaces={workspaces}

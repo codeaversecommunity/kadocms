@@ -43,7 +43,7 @@ export default function MediaDataTable() {
   return (
     <>
       <div className="grid lg:grid-cols-[1fr_400px] gap-5">
-        <div className="h-[calc(100vh-5rem)] flex flex-col gap-5">
+        <div className="flex flex-col gap-5 faded-bottom no-scrollbar overflow-auto">
           <div>
             <div className="flex justify-between items-center">
               <div className="flex items-center gap-4">
