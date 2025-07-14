@@ -250,9 +250,9 @@ export class MediaService {
 
     if (search) {
       whereClause.OR = [
-        { name: { contains: search, mode: "insensitive" } },
-        { description: { contains: search, mode: "insensitive" } },
-        { alt_text: { contains: search, mode: "insensitive" } },
+        { name: { contains: search } },
+        { description: { contains: search } },
+        { alt_text: { contains: search } },
       ];
     }
 

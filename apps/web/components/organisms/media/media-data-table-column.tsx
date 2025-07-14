@@ -1,5 +1,6 @@
 "use client";
 import { DataTableColumnHeader } from "@/components/atoms/table/data-table-column-header";
+import { formatCalendar } from "@/lib/format";
 import { formatBytes } from "@/lib/utils";
 import { Media } from "@/modules/media/media.type";
 import { Column, ColumnDef } from "@tanstack/react-table";
@@ -92,7 +93,8 @@ export const mediaColumns: ColumnDef<Media>[] = [
       const createdAt = row.getValue("created_at") as string;
       return (
         <div className="text-sm">
-          {new Date(createdAt).toLocaleDateString()}
+          {/* {new Date(createdAt).toLocaleDateString()} */}
+          {formatCalendar(createdAt)}
         </div>
       );
     },
