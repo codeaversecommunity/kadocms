@@ -14,7 +14,7 @@ import {
 } from "@/components/atoms/sheet";
 import { Upload, X, File, CheckCircle } from "lucide-react";
 import { Card, CardContent } from "@/components/atoms/card";
-import { cn } from "@/lib/utils";
+import { cn, formatBytes } from "@/lib/utils";
 import { useMediaStore } from "@/modules/media/media.store";
 
 interface MediaUploadDialogProps {
@@ -151,14 +151,6 @@ export function MediaUploadDialog({
     }
   };
 
-  const formatFileSize = (bytes: number) => {
-    if (bytes === 0) return "0 Bytes";
-    const k = 1024;
-    const sizes = ["Bytes", "KB", "MB", "GB"];
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
-  };
-
   const allUploaded = files.length > 0 && files.every((f) => f.uploaded);
 
   return (
@@ -255,7 +247,7 @@ export function MediaUploadDialog({
                               {uploadFile.file.name}
                             </p>
                             <p className={cn("text-sm text-muted-foreground")}>
-                              {formatFileSize(uploadFile.file.size)} •{" "}
+                              {formatBytes(uploadFile.file.size)} •{" "}
                               {uploadFile.file.type}
                             </p>
                           </div>

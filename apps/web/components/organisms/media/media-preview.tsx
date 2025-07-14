@@ -16,7 +16,7 @@ import { Input } from "@/components/atoms/input";
 import { Label } from "@/components/atoms/label";
 import { Separator } from "@/components/atoms/separator";
 import { confirm } from "@/components/providers/confirm-dialog-provider";
-import { cn, formatDate, formatFileSize } from "@/lib/utils";
+import { cn, formatBytes, formatDate } from "@/lib/utils";
 import { useMediaStore } from "@/modules/media/media.store";
 import Image from "next/image";
 
@@ -155,7 +155,7 @@ export default function MediaPreview() {
               <div className="grid grid-cols-2 gap-4 text-sm">
                 <div>
                   <Label className="text-muted-foreground">File Size</Label>
-                  <p>{formatFileSize(media.file_size)}</p>
+                  <p>{formatBytes(media.file_size)}</p>
                 </div>
                 <div>
                   <Label className="text-muted-foreground">Format</Label>

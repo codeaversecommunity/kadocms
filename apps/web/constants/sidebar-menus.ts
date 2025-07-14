@@ -1,4 +1,5 @@
-import { Content } from "@/modules/content/content.action";
+import { Content } from "@/modules/content/content.type";
+import { DashboardIcon } from "@radix-ui/react-icons";
 import { ImagePlus, List, Plus } from "lucide-react";
 
 export const sidebarMenus = ({
@@ -15,6 +16,11 @@ export const sidebarMenus = ({
   }));
 
   return [
+    {
+      title: "Dashboard",
+      url: "/dashboard",
+      icon: DashboardIcon,
+    },
     {
       header: "Content (API)",
     },

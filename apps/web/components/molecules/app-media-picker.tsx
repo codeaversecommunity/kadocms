@@ -11,7 +11,7 @@ import {
   List,
   Check,
 } from "lucide-react";
-import { cn, formatFileSize, formatDate } from "@/lib/utils";
+import { cn, formatDate, formatBytes } from "@/lib/utils";
 import { useMediaStore } from "@/modules/media/media.store";
 import { Card, CardContent } from "../atoms/card";
 import { Button } from "../atoms/button";
@@ -353,7 +353,7 @@ export default function AppMediaPicker({
                         />
                       </TableCell>
                       <TableCell>{media.name}</TableCell>
-                      <TableCell>{formatFileSize(media.file_size)}</TableCell>
+                      <TableCell>{formatBytes(media.file_size)}</TableCell>
                       <TableCell>{formatDate(media.created_at)}</TableCell>
                     </TableRow>
                   ))}

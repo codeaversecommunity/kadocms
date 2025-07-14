@@ -39,6 +39,7 @@ export async function updateSession(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
+  // Main domain auth logic
   if (
     !user &&
     !request.nextUrl.pathname.startsWith("/login") &&

@@ -22,7 +22,7 @@ export default async function DashboardLayout({
 
   return (
     <KBar>
-      <SidebarProvider defaultOpen={defaultOpen}>
+      <SidebarProvider defaultOpen={defaultOpen || true}>
         <AppSidebar profile={profile} workspaces={workspaces} />
         <SidebarInset>
           <AppHeader />

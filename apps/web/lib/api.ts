@@ -1,6 +1,7 @@
 "use server";
 import { cookies } from "next/headers";
 import { createSupabaseServer } from "./supabase/server";
+import { notFound, unauthorized } from "next/navigation";
 
 export async function $api<T>(
   endpoint: string,
@@ -26,8 +27,9 @@ export async function $api<T>(
 
   if (!response.ok) {
     if (response.status === 401) {
-      supabase.auth.signOut();
+      await supabase.auth.signOut();
       throw new Error("Unauthorized. Please log in again.");
+      // return notFound();
     }
     if (response.status === 403) {
       throw new Error(
