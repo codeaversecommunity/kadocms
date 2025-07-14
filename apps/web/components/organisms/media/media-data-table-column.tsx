@@ -11,6 +11,9 @@ export const mediaColumns: ColumnDef<Media>[] = [
   {
     accessorKey: "file_path",
     header: "PREVIEW",
+    meta: {
+      label: "Preview",
+    },
     cell: ({ row }) => {
       const mediaType = row.getValue("media_type") as string;
       const filePath = row.getValue("file_path") as string;
@@ -50,7 +53,7 @@ export const mediaColumns: ColumnDef<Media>[] = [
     ),
     cell: ({ cell }) => <div>{cell.getValue<Media["name"]>()}</div>,
     meta: {
-      label: "Name",
+      label: "File Name",
       placeholder: "Search files...",
       variant: "text",
       icon: Text,
@@ -64,6 +67,9 @@ export const mediaColumns: ColumnDef<Media>[] = [
       const mediaType = row.getValue("media_type") as string;
       return <div className="text-sm">{mediaType}</div>;
     },
+    meta: {
+      label: "Format",
+    },
   },
   {
     accessorKey: "file_size",
@@ -71,6 +77,9 @@ export const mediaColumns: ColumnDef<Media>[] = [
     cell: ({ row }) => {
       const fileSize = row.getValue("file_size") as number;
       return <div className="text-sm">{formatBytes(fileSize) || "N/A"}</div>;
+    },
+    meta: {
+      label: "File Size",
     },
   },
   {
@@ -85,6 +94,9 @@ export const mediaColumns: ColumnDef<Media>[] = [
         </div>
       );
     },
+    meta: {
+      label: "Image Size",
+    },
   },
   {
     accessorKey: "created_at",
@@ -97,6 +109,9 @@ export const mediaColumns: ColumnDef<Media>[] = [
           {formatCalendar(createdAt)}
         </div>
       );
+    },
+    meta: {
+      label: "Date Created",
     },
   },
 
