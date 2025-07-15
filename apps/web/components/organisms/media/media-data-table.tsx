@@ -43,8 +43,17 @@ export default function MediaDataTable<TData, TValue>({
   });
 
   return (
-    <DataTable table={table}>
-      <DataTableToolbar table={table} />
-    </DataTable>
+    <div className="grid lg:grid-cols-[1fr_400px] gap-5 flex-1">
+      <DataTable table={table}>
+        <DataTableToolbar table={table} />
+      </DataTable>
+
+      <div className="hidden lg:block">
+        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolorum
+        explicabo, praesentium molestiae illum nulla, ratione doloribus nihil
+        quis nisi libero odit accusantium repellendus asperiores repellat soluta
+        aspernatur, amet quibusdam ut!
+      </div>
+    </div>
   );
 }
