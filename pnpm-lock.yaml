@@ -273,6 +273,9 @@ importers:
       react-dropzone:
         specifier: ^14.3.8
         version: 14.3.8(react@19.1.0)
+      require-in-the-middle:
+        specifier: ^6.0.0
+        version: 6.0.0
       sonner:
         specifier: ^2.0.5
         version: 2.0.5(react-dom@19.1.0)(react@19.1.0)
@@ -9967,6 +9970,17 @@ packages:
   /require-from-string@2.0.2:
     resolution: {integrity: sha512-Xf0nWe6RseziFMu+Ap9biiUbmplq6S9/p+7w7YXP/JBHhrUDDUhwa+vANyubuqfZWTveU//DYVGsDG7RKL/vEw==}
     engines: {node: '>=0.10.0'}
+
+  /require-in-the-middle@6.0.0:
+    resolution: {integrity: sha512-+dtWQ7l2lqQDxheaG3jjyN1QI37gEwvzACSgjYi4/C2y+ZTUMeRW8BIOm+9NBKvwaMBUSZfPXVOt1skB0vBkRw==}
+    engines: {node: '>=8.6.0'}
+    dependencies:
+      debug: 4.4.1
+      module-details-from-path: 1.0.4
+      resolve: 1.22.10
+    transitivePeerDependencies:
+      - supports-color
+    dev: false
 
   /require-in-the-middle@7.5.2:
     resolution: {integrity: sha512-gAZ+kLqBdHarXB64XpAe2VCjB7rIRv+mU8tfRWziHRJ5umKsIHN2tLLv6EtMw7WCdP19S0ERVMldNvxYCHnhSQ==}

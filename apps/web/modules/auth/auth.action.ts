@@ -4,6 +4,7 @@
 import { $api } from "@/lib/api";
 import { createSupabaseServer } from "@/lib/supabase/server";
 import { cookies } from "next/headers";
+import { getProfile } from "../user/user.action";
 
 export interface InitializeAuthResponse {
   success: boolean;
@@ -34,6 +35,7 @@ export async function initializeAuth() {
   } = await supabase.auth.getSession();
 
   if (error || !session) {
+    console.error("Failed to get session", error, session);
     throw new Error(`Failed to get session: ${error?.message}`);
   }
 
@@ -74,7 +76,7 @@ export async function initializeAuth() {
     maxAge: 60 * 60 * 24, // 1 day
   });
 
-  return responseData.data.user;
+  return await getProfile();
 }
 
 export async function syncOAuth(accessToken: string, user: any) {
