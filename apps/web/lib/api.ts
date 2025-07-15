@@ -1,7 +1,6 @@
 "use server";
 import { cookies } from "next/headers";
 import { createSupabaseServer } from "./supabase/server";
-import { notFound, unauthorized } from "next/navigation";
 
 export async function $api<T>(
   endpoint: string,
@@ -13,7 +12,7 @@ export async function $api<T>(
 
   const config: RequestInit = {
     headers: {
-      "Content-Type": "application/json",
+      // "Content-Type": "application/json",
       ...(token && { Authorization: `Bearer ${token}` }),
       ...options.headers,
     },
@@ -27,9 +26,8 @@ export async function $api<T>(
 
   if (!response.ok) {
     if (response.status === 401) {
-      await supabase.auth.signOut();
+      supabase.auth.signOut();
       throw new Error("Unauthorized. Please log in again.");
-      // return notFound();
     }
     if (response.status === 403) {
       throw new Error(

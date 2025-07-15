@@ -1,8 +1,8 @@
-import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
-import { MediaService } from './media.service';
-import { MediaController } from './media.controller';
-import { CloudinaryService } from './cloudinary.service';
+import { Module } from "@nestjs/common";
+import { ConfigModule } from "@nestjs/config";
+import { MediaService } from "./media.service";
+import { MediaController } from "./media.controller";
+import { CloudinaryService } from "./cloudinary.service";
 
 @Module({
   imports: [ConfigModule],
