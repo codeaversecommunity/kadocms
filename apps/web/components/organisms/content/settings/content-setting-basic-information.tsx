@@ -6,7 +6,8 @@ import { Button } from "@/components/atoms/button";
 import { Input } from "@/components/atoms/input";
 import { Label } from "@/components/atoms/label";
 import { toast } from "sonner";
-import { Content, updateContent } from "@/modules/content/content.action";
+import { updateContent } from "@/modules/content/content.action";
+import { Content } from "@/modules/content/content.type";
 
 export default function ContentSettingBasicInformation({
   content,
