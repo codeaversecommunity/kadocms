@@ -177,8 +177,8 @@ export class ContentEntriesService {
     ]);
 
     return {
-      entries,
-      pagination: {
+      data: entries,
+      meta: {
         page,
         limit,
         total,

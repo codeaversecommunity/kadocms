@@ -54,11 +54,7 @@ export const mediaColumns: ColumnDef<Media>[] = [
     cell: ({ cell }) => <div>{cell.getValue<Media["name"]>()}</div>,
     meta: {
       label: "File Name",
-      placeholder: "Search files...",
-      variant: "text",
-      icon: Text,
     },
-    enableColumnFilter: true,
   },
   {
     accessorKey: "media_type",

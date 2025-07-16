@@ -11,6 +11,7 @@ import { Button } from "@/components/atoms/button";
 import { Input } from "@/components/atoms/input";
 import { cn } from "@/lib/utils";
 import { Cross2Icon } from "@radix-ui/react-icons";
+import { useSearchParams } from "next/navigation";
 
 interface DataTableToolbarProps<TData> extends React.ComponentProps<"div"> {
   table: Table<TData>;
@@ -22,6 +23,29 @@ export function DataTableToolbar<TData>({
   className,
   ...props
 }: DataTableToolbarProps<TData>) {
+  const searchParams = useSearchParams();
+  const search = searchParams.get("search") || "";
+
+  const onChangeSearch = (value: string) => {
+    const params = new URLSearchParams(searchParams.toString());
+    if (value) {
+      params.set("search", value);
+    } else {
+      params.delete("search");
+    }
+    table.setGlobalFilter(value);
+    table.setPageIndex(0);
+    table.setColumnFilters((old) => {
+      return old.map((filter) => {
+        if (filter.id === "se") {
+          return { ...filter, value: value };
+        }
+        return filter;
+      });
+    });
+    window.history.replaceState({}, "", `?${params.toString()}`);
+  };
+
   const isFiltered = table.getState().columnFilters.length > 0;
 
   const columns = React.useMemo(
@@ -44,6 +68,24 @@ export function DataTableToolbar<TData>({
       {...props}
     >
       <div className="flex flex-1 flex-wrap items-center gap-2">
+        <Input
+          placeholder="Search..."
+          className="max-w-sm"
+          value={search}
+          onChange={(e) => onChangeSearch(e.target.value)}
+        />
+        {search && (
+          <Button
+            aria-label="Reset filters"
+            variant="outline"
+            size="sm"
+            className="border-dashed"
+            onClick={() => onChangeSearch("")}
+          >
+            <Cross2Icon />
+            Reset
+          </Button>
+        )}
         {columns.map((column) => (
           <DataTableToolbarFilter key={column.id} column={column} />
         ))}

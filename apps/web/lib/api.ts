@@ -11,12 +11,12 @@ export async function $api<T>(
   const supabase = await createSupabaseServer();
 
   const config: RequestInit = {
-    headers: {
-      // "Content-Type": "application/json",
-      ...(token && { Authorization: `Bearer ${token}` }),
-      ...options.headers,
-    },
     ...options,
+    headers: {
+      "Content-Type": "application/json",
+      ...options.headers,
+      ...(token && { Authorization: `Bearer ${token}` }),
+    },
   };
 
   const response = await fetch(

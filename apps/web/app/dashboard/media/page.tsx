@@ -19,7 +19,7 @@ export default async function MediaPage(props: pageProps) {
   searchParamsCache.parse(searchParams);
 
   const page = searchParamsCache.get("page");
-  const search = searchParamsCache.get("name");
+  const search = searchParamsCache.get("search");
   const pageLimit = searchParamsCache.get("perPage");
 
   const filters = {

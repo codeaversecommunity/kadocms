@@ -2,6 +2,7 @@
 
 import { $api } from "@/lib/api";
 import { Content } from "./content.type";
+import { PaginatedResult } from "@/types/api";
 
 export async function getContents() {
   return $api(`/contents`);
@@ -46,7 +47,7 @@ export async function getContentEntries(params: {
   limit?: number;
   sort?: string;
   order?: "asc" | "desc";
-}) {
+}): Promise<PaginatedResult<any>> {
   const query = new URLSearchParams(params as any).toString();
   return $api(`/content-entries?${query}`);
 }
