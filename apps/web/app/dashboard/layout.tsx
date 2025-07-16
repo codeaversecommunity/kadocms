@@ -7,6 +7,19 @@ import { SidebarInset, SidebarProvider } from "@/components/atoms/sidebar";
 import KBar from "@/components/layouts/kbar";
 import { cookies } from "next/headers";
 import AppHeader from "@/components/layouts/app-header/app-header";
+import { Metadata, ResolvingMetadata } from "next";
+
+export async function generateMetadata(): Promise<Metadata> {
+  const profile = await getProfile();
+
+  return {
+    title: {
+      template: `%s |  ${profile?.workspace?.name}'s Workspace`,
+      default: `Dashboard | ${profile?.workspace?.name}'s Workspace`,
+    },
+    description: `Welcome to your dashboard, ${profile?.full_name || "User"}!`,
+  };
+}
 
 export default async function DashboardLayout({
   children,

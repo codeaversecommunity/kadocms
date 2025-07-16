@@ -1,6 +1,6 @@
 import { Content } from "@/modules/content/content.type";
 import { DashboardIcon } from "@radix-ui/react-icons";
-import { ImagePlus, List, Plus } from "lucide-react";
+import { ImagePlus, List, Plus, Settings, Users } from "lucide-react";
 
 export const sidebarMenus = ({
   contents = [], // Default to an empty array if not provided
@@ -39,9 +39,19 @@ export const sidebarMenus = ({
       url: "/dashboard/media",
       icon: ImagePlus,
     },
-    // {
-    //   header: "Others",
-    // },
+    {
+      header: "Others",
+    },
+    {
+      title: "Members",
+      url: "/dashboard/members",
+      icon: Users,
+    },
+    {
+      title: "Settings",
+      url: "/dashboard/settings",
+      icon: Settings,
+    },
     // {
     //   title: "Documentation",
     //   url: "#",
