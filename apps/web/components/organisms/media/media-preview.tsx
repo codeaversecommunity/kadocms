@@ -20,20 +20,34 @@ import { cn, formatBytes, formatDate } from "@/lib/utils";
 import Image from "next/image";
 import { Media } from "@/modules/media/media.type";
 import { getMediaById } from "@/modules/media/media.action";
+import { Skeleton } from "@/components/atoms/skeleton";
 
-export default function MediaPreview({ media_id }: { media_id?: string }) {
-  const [media, setMedia] = useState<Media | null>(null);
-  const [loading, setLoading] = useState(false);
+export default function MediaPreview({
+  media_id,
+  initialMedia,
+}: {
+  media_id?: string;
+  initialMedia?: Media | null;
+}) {
+  const [media, setMedia] = useState<Media | null>(initialMedia ?? null);
+  const [fetching, setFetching] = useState(false);
+  const [updating, setUpdating] = useState(false);
+  const [deleting, setDeleting] = useState(false);
 
   const [altText, setAltText] = useState(media?.alt_text || "");
   const [description, setDescription] = useState(media?.description || "");
   const [copySuccess, setCopySuccess] = useState(false);
 
   useEffect(() => {
+    if (initialMedia) {
+      setMedia(initialMedia);
+      setAltText(initialMedia?.alt_text || "");
+      setDescription(initialMedia?.description || "");
+      return;
+    }
     const fetchMedia = async () => {
       if (!media_id) return;
-
-      setLoading(true);
+      setFetching(true);
       try {
         const response = await getMediaById(media_id);
         if (response) {
@@ -46,12 +60,11 @@ export default function MediaPreview({ media_id }: { media_id?: string }) {
       } catch (error) {
         console.error("Failed to fetch media:", error);
       } finally {
-        setLoading(false);
+        setFetching(false);
       }
     };
-
     fetchMedia();
-  }, [media_id]);
+  }, [media_id, initialMedia]);
 
   const hasChanges =
     altText !== (media?.alt_text || "") ||
@@ -69,7 +82,6 @@ export default function MediaPreview({ media_id }: { media_id?: string }) {
 
   const handleDownload = () => {
     if (!media) return;
-
     const link = document.createElement("a");
     link.href = media.file_path;
     link.download = media.name;
@@ -79,27 +91,81 @@ export default function MediaPreview({ media_id }: { media_id?: string }) {
   };
 
   const onUpdate = async () => {
-    // await mediaStore.update(media?.id || "", {
-    //   alt_text: altText,
-    //   description: description,
-    // });
+    setUpdating(true);
+    try {
+      // await mediaStore.update(media?.id || "", {
+      //   alt_text: altText,
+      //   description: description,
+      // });
+    } finally {
+      setUpdating(false);
+    }
   };
 
   const onDelete = async () => {
-    const confirmed = await confirm({
-      title: "Delete File",
-      description:
-        "Are you sure you want to delete this file? This action cannot be undone.",
-      confirmText: "Delete",
-      cancelText: "Cancel",
-    });
-
-    // if (confirmed) await mediaStore.delete(media?.id || "");
+    setDeleting(true);
+    try {
+      const confirmed = await confirm({
+        title: "Delete File",
+        description:
+          "Are you sure you want to delete this file? This action cannot be undone.",
+        confirmText: "Delete",
+        cancelText: "Cancel",
+      });
+      // if (confirmed) await mediaStore.delete(media?.id || "");
+    } finally {
+      setDeleting(false);
+    }
   };
 
   return (
     <Card className="h-full pt-0">
-      {!media ? (
+      {fetching ? (
+        <CardContent className="flex justify-center h-full pt-5">
+          {/* Skeleton loading for fetch */}
+          <div className="w-full">
+            <div className="animate-pulse space-y-4">
+              <Skeleton className="h-60 w-full rounded-lg" />
+              <div className="flex gap-2">
+                <Skeleton className="h-6 w-1/5 rounded" />
+                <Skeleton className="h-6 w-1/5 rounded" />
+                <Skeleton className="h-6 w-1/5 rounded" />
+              </div>
+
+              <Separator className="my-4" />
+
+              {/* loop for 6 times */}
+              <div className="grid grid-cols-2 gap-10">
+                {Array.from({ length: 6 }).map((_, index) => (
+                  <div className="space-y-2">
+                    <Skeleton className="h-4 w-3/4 rounded" />
+                    <Skeleton className="h-4 w-2/2 rounded" />
+                  </div>
+                ))}
+              </div>
+
+              <Separator className="my-4" />
+
+              <Skeleton className="h-6 w-2/5 rounded" />
+
+              <div className="space-y-2">
+                <Skeleton className="h-4 w-1/4 rounded" />
+                <Skeleton className="h-6 w-full rounded" />
+              </div>
+              <div className="space-y-2">
+                <Skeleton className="h-4 w-1/4 rounded" />
+                <Skeleton className="h-6 w-full rounded" />
+              </div>
+
+              <Separator className="my-4" />
+
+              <Skeleton className="h-6 w-2/5 rounded" />
+
+              <Skeleton className="h-10 w-full rounded" />
+            </div>
+          </div>
+        </CardContent>
+      ) : !media ? (
         <CardContent className="flex items-center justify-center h-full">
           <div className="text-muted-foreground text-sm">
             Select a file to view details
@@ -252,11 +318,11 @@ export default function MediaPreview({ media_id }: { media_id?: string }) {
 
               {hasChanges && (
                 <Button
-                  disabled={loading}
+                  disabled={updating}
                   className="w-full"
                   onClick={onUpdate}
                 >
-                  {loading ? (
+                  {updating ? (
                     <>
                       <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
                       Saving...
@@ -279,10 +345,10 @@ export default function MediaPreview({ media_id }: { media_id?: string }) {
               <Button
                 variant="destructive"
                 className="w-full"
-                disabled={loading}
+                disabled={deleting}
                 onClick={onDelete}
               >
-                {loading ? (
+                {deleting ? (
                   <>
                     <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
                     Deleting...
