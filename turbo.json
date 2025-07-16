@@ -12,7 +12,7 @@
     },
     "build": {
       "dependsOn": ["^build"],
-      "outputs": [".next/**", "!.next/cache/**"]
+      "outputs": [".next/**", "dist/**", "!.next/cache/**"]
     },
     "prisma:generate": {
       "cache": false,
