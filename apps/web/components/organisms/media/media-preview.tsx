@@ -21,6 +21,8 @@ import Image from "next/image";
 import { Media } from "@/modules/media/media.type";
 import { getMediaById } from "@/modules/media/media.action";
 import { Skeleton } from "@/components/atoms/skeleton";
+import MediaPreviewLoading from "./media-preview-loading";
+import { ScrollArea } from "@/components/atoms/scroll-area";
 
 export default function MediaPreview({
   media_id,
@@ -83,6 +85,8 @@ export default function MediaPreview({
   const handleDownload = () => {
     if (!media) return;
     const link = document.createElement("a");
+    link.target = "_blank";
+    link.rel = "noopener noreferrer";
     link.href = media.file_path;
     link.download = media.name;
     document.body.appendChild(link);
@@ -119,251 +123,210 @@ export default function MediaPreview({
   };
 
   return (
-    <Card className="h-full pt-0">
-      {fetching ? (
-        <CardContent className="flex justify-center h-full pt-5">
-          {/* Skeleton loading for fetch */}
-          <div className="w-full">
-            <div className="animate-pulse space-y-4">
-              <Skeleton className="h-60 w-full rounded-lg" />
-              <div className="flex gap-2">
-                <Skeleton className="h-6 w-1/5 rounded" />
-                <Skeleton className="h-6 w-1/5 rounded" />
-                <Skeleton className="h-6 w-1/5 rounded" />
-              </div>
-
-              <Separator className="my-4" />
-
-              {/* loop for 6 times */}
-              <div className="grid grid-cols-2 gap-10">
-                {Array.from({ length: 6 }).map((_, index) => (
-                  <div className="space-y-2">
-                    <Skeleton className="h-4 w-3/4 rounded" />
-                    <Skeleton className="h-4 w-2/2 rounded" />
+    <div className="relative flex flex-1 flex-col h-full">
+      <Card className="absolute inset-0 flex overflow-hidden rounded-lg pt-0">
+        {fetching ? (
+          <MediaPreviewLoading />
+        ) : !media ? (
+          <CardContent className="flex flex-1 items-center justify-center h-full">
+            <div className="text-muted-foreground text-sm">
+              Select a file to view details
+            </div>
+          </CardContent>
+        ) : (
+          <ScrollArea className="h-full w-full">
+            {/* Preview */}
+            <div className="bg-muted p-4 mb-5">
+              {media.media_type.includes("IMAGE") ? (
+                <Image
+                  width={media.width || 800}
+                  height={media.height || 600}
+                  src={media.file_path}
+                  alt={media.alt_text || media.name}
+                  className="max-w-full object-contain h-60 w-full mx-auto"
+                />
+              ) : (
+                <div className="flex items-center justify-center h-48 bg-background rounded-lg">
+                  <div className="text-center">
+                    <FileText className="h-12 w-12 mx-auto text-muted-foreground mb-2" />
+                    <p className="font-medium">{media.name}</p>
+                    <p className="text-sm text-muted-foreground">
+                      {media.media_type}
+                    </p>
                   </div>
-                ))}
-              </div>
-
-              <Separator className="my-4" />
-
-              <Skeleton className="h-6 w-2/5 rounded" />
-
-              <div className="space-y-2">
-                <Skeleton className="h-4 w-1/4 rounded" />
-                <Skeleton className="h-6 w-full rounded" />
-              </div>
-              <div className="space-y-2">
-                <Skeleton className="h-4 w-1/4 rounded" />
-                <Skeleton className="h-6 w-full rounded" />
-              </div>
-
-              <Separator className="my-4" />
-
-              <Skeleton className="h-6 w-2/5 rounded" />
-
-              <Skeleton className="h-10 w-full rounded" />
-            </div>
-          </div>
-        </CardContent>
-      ) : !media ? (
-        <CardContent className="flex items-center justify-center h-full">
-          <div className="text-muted-foreground text-sm">
-            Select a file to view details
-          </div>
-        </CardContent>
-      ) : (
-        <>
-          {/* Preview */}
-          <div className="bg-muted p-4">
-            {media.media_type.includes("IMAGE") ? (
-              <Image
-                width={media.width || 800}
-                height={media.height || 600}
-                src={media.file_path}
-                alt={media.alt_text || media.name}
-                className="max-w-full object-contain h-60 w-full mx-auto"
-              />
-            ) : (
-              <div className="flex items-center justify-center h-48 bg-background rounded-lg">
-                <div className="text-center">
-                  <FileText className="h-12 w-12 mx-auto text-muted-foreground mb-2" />
-                  <p className="font-medium">{media.name}</p>
-                  <p className="text-sm text-muted-foreground">
-                    {media.media_type}
-                  </p>
-                </div>
-              </div>
-            )}
-          </div>
-
-          <CardContent className="pb-5">
-            {/* Actions */}
-            <div className="flex gap-2">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={handleCopyUrl}
-                className={cn(
-                  "cursor-pointer",
-                  copySuccess
-                    ? "bg-green-50 border-green-200 text-green-700"
-                    : ""
-                )}
-              >
-                {copySuccess ? (
-                  <>
-                    <CheckCircle className="h-4 w-4 mr-2" />
-                    Copied!
-                  </>
-                ) : (
-                  <>
-                    <Copy className="h-4 w-4 mr-2" />
-                    Copy URL
-                  </>
-                )}
-              </Button>
-              <Button variant="outline" size="sm" onClick={handleDownload}>
-                <Download className="h-4 w-4 mr-2" />
-                Download
-              </Button>
-              <Button variant="outline" size="sm" asChild>
-                <a
-                  href={media?.file_path}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <ExternalLink className="h-4 w-4 mr-2" />
-                  Open
-                </a>
-              </Button>
-            </div>
-
-            <Separator className="my-4" />
-
-            {/* File Details */}
-            <div className="space-y-4">
-              <h3 className="font-medium">File Details</h3>
-              <div className="grid grid-cols-2 gap-4 text-sm">
-                <div>
-                  <Label className="text-muted-foreground">File Size</Label>
-                  <p>{formatBytes(media.file_size)}</p>
-                </div>
-                <div>
-                  <Label className="text-muted-foreground">Format</Label>
-                  <p>{media.media_type}</p>
-                </div>
-                {media.width && media.height && (
-                  <>
-                    <div>
-                      <Label className="text-muted-foreground">
-                        Dimensions
-                      </Label>
-                      <p>
-                        {media.width} × {media.height} pixels
-                      </p>
-                    </div>
-                    <div>
-                      <Label className="text-muted-foreground">
-                        Aspect Ratio
-                      </Label>
-                      <p>
-                        {(media.width / media.height).toFixed(2)}
-                        :1
-                      </p>
-                    </div>
-                  </>
-                )}
-                <div>
-                  <Label className="text-muted-foreground">Created</Label>
-                  <p>{formatDate(media.created_at)}</p>
-                </div>
-                <div>
-                  <Label className="text-muted-foreground">Modified</Label>
-                  <p>{formatDate(media.updated_at)}</p>
-                </div>
-              </div>
-            </div>
-
-            <Separator className="my-4" />
-
-            {/* Metadata */}
-            <div className="space-y-4">
-              <h3 className="font-medium">Metadata</h3>
-
-              {media.media_type.includes("IMAGE") && (
-                <div>
-                  <Label className="mb-2" htmlFor="alt-text">
-                    Alt Text
-                  </Label>
-                  <Input
-                    id="alt-text"
-                    placeholder="Describe this image for accessibility..."
-                    value={altText}
-                    onChange={(e) => setAltText(e.target.value)}
-                  />
                 </div>
               )}
+            </div>
 
-              <div>
-                <Label className="mb-2" htmlFor="description">
-                  Description
-                </Label>
-                <Input
-                  id="description"
-                  placeholder="Add a description..."
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
-                />
-              </div>
-
-              {hasChanges && (
+            <CardContent className="pb-5">
+              {/* Actions */}
+              <div className="flex gap-2">
                 <Button
-                  disabled={updating}
-                  className="w-full"
-                  onClick={onUpdate}
+                  variant="outline"
+                  size="sm"
+                  onClick={handleCopyUrl}
+                  className={cn(
+                    "cursor-pointer",
+                    copySuccess
+                      ? "bg-green-50 border-green-200 text-green-700"
+                      : ""
+                  )}
                 >
-                  {updating ? (
+                  {copySuccess ? (
                     <>
-                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                      Saving...
+                      <CheckCircle className="h-4 w-4 mr-2" />
+                      Copied!
                     </>
                   ) : (
                     <>
-                      <Save className="h-4 w-4 mr-2" />
-                      Save Changes
+                      <Copy className="h-4 w-4 mr-2" />
+                      Copy URL
                     </>
                   )}
                 </Button>
-              )}
-            </div>
+                <Button variant="outline" size="sm" onClick={handleDownload}>
+                  <Download className="h-4 w-4 mr-2" />
+                  Download
+                </Button>
+                <Button variant="outline" size="sm" asChild>
+                  <a
+                    href={media?.file_path}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <ExternalLink className="h-4 w-4 mr-2" />
+                    Open
+                  </a>
+                </Button>
+              </div>
 
-            <Separator className="my-4" />
+              <Separator className="my-4" />
 
-            {/* Danger Zone */}
-            <div className="space-y-4">
-              <h3 className="font-medium text-red-600">Danger Zone</h3>
-              <Button
-                variant="destructive"
-                className="w-full"
-                disabled={deleting}
-                onClick={onDelete}
-              >
-                {deleting ? (
-                  <>
-                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                    Deleting...
-                  </>
-                ) : (
-                  <>
-                    <Trash2 className="h-4 w-4 mr-2" />
-                    Delete File
-                  </>
+              {/* File Details */}
+              <div className="space-y-4">
+                <h3 className="font-medium">File Details</h3>
+                <div className="grid grid-cols-2 gap-4 text-sm">
+                  <div>
+                    <Label className="text-muted-foreground">File Size</Label>
+                    <p>{formatBytes(media.file_size)}</p>
+                  </div>
+                  <div>
+                    <Label className="text-muted-foreground">Format</Label>
+                    <p>{media.media_type}</p>
+                  </div>
+                  {media.width && media.height && (
+                    <>
+                      <div>
+                        <Label className="text-muted-foreground">
+                          Dimensions
+                        </Label>
+                        <p>
+                          {media.width} × {media.height} pixels
+                        </p>
+                      </div>
+                      <div>
+                        <Label className="text-muted-foreground">
+                          Aspect Ratio
+                        </Label>
+                        <p>
+                          {(media.width / media.height).toFixed(2)}
+                          :1
+                        </p>
+                      </div>
+                    </>
+                  )}
+                  <div>
+                    <Label className="text-muted-foreground">Created</Label>
+                    <p>{formatDate(media.created_at)}</p>
+                  </div>
+                  <div>
+                    <Label className="text-muted-foreground">Modified</Label>
+                    <p>{formatDate(media.updated_at)}</p>
+                  </div>
+                </div>
+              </div>
+
+              <Separator className="my-4" />
+
+              {/* Metadata */}
+              <div className="space-y-4">
+                <h3 className="font-medium">Metadata</h3>
+
+                {media.media_type.includes("IMAGE") && (
+                  <div>
+                    <Label className="mb-2" htmlFor="alt-text">
+                      Alt Text
+                    </Label>
+                    <Input
+                      id="alt-text"
+                      placeholder="Describe this image for accessibility..."
+                      value={altText}
+                      onChange={(e) => setAltText(e.target.value)}
+                    />
+                  </div>
                 )}
-              </Button>
-            </div>
-          </CardContent>
-        </>
-      )}
-    </Card>
+
+                <div>
+                  <Label className="mb-2" htmlFor="description">
+                    Description
+                  </Label>
+                  <Input
+                    id="description"
+                    placeholder="Add a description..."
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                  />
+                </div>
+
+                {hasChanges && (
+                  <Button
+                    disabled={updating}
+                    className="w-full"
+                    onClick={onUpdate}
+                  >
+                    {updating ? (
+                      <>
+                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                        Saving...
+                      </>
+                    ) : (
+                      <>
+                        <Save className="h-4 w-4 mr-2" />
+                        Save Changes
+                      </>
+                    )}
+                  </Button>
+                )}
+              </div>
+
+              <Separator className="my-4" />
+
+              {/* Danger Zone */}
+              <div className="space-y-4">
+                <h3 className="font-medium text-red-600">Danger Zone</h3>
+                <Button
+                  variant="destructive"
+                  className="w-full"
+                  disabled={deleting}
+                  onClick={onDelete}
+                >
+                  {deleting ? (
+                    <>
+                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                      Deleting...
+                    </>
+                  ) : (
+                    <>
+                      <Trash2 className="h-4 w-4 mr-2" />
+                      Delete File
+                    </>
+                  )}
+                </Button>
+              </div>
+            </CardContent>
+          </ScrollArea>
+        )}
+      </Card>
+    </div>
   );
 }
