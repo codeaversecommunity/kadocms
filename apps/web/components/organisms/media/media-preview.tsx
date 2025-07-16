@@ -9,7 +9,7 @@ import {
   Save,
   Trash2,
 } from "lucide-react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "@/components/atoms/button";
 import { Card, CardContent } from "@/components/atoms/card";
 import { Input } from "@/components/atoms/input";
@@ -17,16 +17,41 @@ import { Label } from "@/components/atoms/label";
 import { Separator } from "@/components/atoms/separator";
 import { confirm } from "@/components/providers/confirm-dialog-provider";
 import { cn, formatBytes, formatDate } from "@/lib/utils";
-import { useMediaStore } from "@/modules/media/media.store";
 import Image from "next/image";
+import { Media } from "@/modules/media/media.type";
+import { getMediaById } from "@/modules/media/media.action";
 
-export default function MediaPreview() {
-  const mediaStore = useMediaStore();
-  const { report: media } = mediaStore;
+export default function MediaPreview({ media_id }: { media_id?: string }) {
+  const [media, setMedia] = useState<Media | null>(null);
+  const [loading, setLoading] = useState(false);
 
   const [altText, setAltText] = useState(media?.alt_text || "");
   const [description, setDescription] = useState(media?.description || "");
   const [copySuccess, setCopySuccess] = useState(false);
+
+  useEffect(() => {
+    const fetchMedia = async () => {
+      if (!media_id) return;
+
+      setLoading(true);
+      try {
+        const response = await getMediaById(media_id);
+        if (response) {
+          setMedia(response);
+          setAltText(response?.alt_text || "");
+          setDescription(response?.description || "");
+        } else {
+          console.error("Media not found");
+        }
+      } catch (error) {
+        console.error("Failed to fetch media:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchMedia();
+  }, [media_id]);
 
   const hasChanges =
     altText !== (media?.alt_text || "") ||
@@ -54,10 +79,10 @@ export default function MediaPreview() {
   };
 
   const onUpdate = async () => {
-    await mediaStore.update(media?.id || "", {
-      alt_text: altText,
-      description: description,
-    });
+    // await mediaStore.update(media?.id || "", {
+    //   alt_text: altText,
+    //   description: description,
+    // });
   };
 
   const onDelete = async () => {
@@ -69,11 +94,11 @@ export default function MediaPreview() {
       cancelText: "Cancel",
     });
 
-    if (confirmed) await mediaStore.delete(media?.id || "");
+    // if (confirmed) await mediaStore.delete(media?.id || "");
   };
 
   return (
-    <Card className="py-0 sticky top-5">
+    <Card className="h-full pt-0">
       {!media ? (
         <CardContent className="flex items-center justify-center h-full">
           <div className="text-muted-foreground text-sm">
@@ -227,11 +252,11 @@ export default function MediaPreview() {
 
               {hasChanges && (
                 <Button
-                  disabled={mediaStore.loading_update}
+                  disabled={loading}
                   className="w-full"
                   onClick={onUpdate}
                 >
-                  {mediaStore.loading_update ? (
+                  {loading ? (
                     <>
                       <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
                       Saving...
@@ -254,10 +279,10 @@ export default function MediaPreview() {
               <Button
                 variant="destructive"
                 className="w-full"
-                disabled={mediaStore.loading_delete}
+                disabled={loading}
                 onClick={onDelete}
               >
-                {mediaStore.loading_delete ? (
+                {loading ? (
                   <>
                     <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
                     Deleting...

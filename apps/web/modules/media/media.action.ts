@@ -50,7 +50,7 @@ export async function uploadMediaBase64(data: UploadBase64Data) {
 }
 
 // Get single media item
-export async function getMediaItem(id: string) {
+export async function getMediaById(id: string): Promise<Media> {
   return $api(`/media/${id}`);
 }
 

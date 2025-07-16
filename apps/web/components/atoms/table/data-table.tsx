@@ -12,16 +12,19 @@ import {
 } from "@/components/atoms/table";
 import { getCommonPinningStyles } from "@/lib/data-table";
 import { ScrollArea, ScrollBar } from "@/components/atoms/scroll-area";
+import { cn } from "@/lib/utils";
 
 interface DataTableProps<TData> extends React.ComponentProps<"div"> {
   table: TanstackTable<TData>;
   actionBar?: React.ReactNode;
+  isSelectedRow?: boolean;
 }
 
 export function DataTable<TData>({
   table,
   actionBar,
   children,
+  isSelectedRow,
 }: DataTableProps<TData>) {
   return (
     <div className="flex flex-1 flex-col space-y-4">
@@ -58,6 +61,12 @@ export function DataTable<TData>({
                     <TableRow
                       key={row.id}
                       data-state={row.getIsSelected() && "selected"}
+                      onClick={() => isSelectedRow && row.toggleSelected()}
+                      className={cn(
+                        isSelectedRow &&
+                          "cursor-pointer hover:bg-accent data-[state=selected]:bg-accent",
+                        isSelectedRow && row.getIsSelected() && "bg-accent"
+                      )}
                     >
                       {row.getVisibleCells().map((cell) => (
                         <TableCell
