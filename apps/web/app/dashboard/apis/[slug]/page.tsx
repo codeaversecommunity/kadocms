@@ -46,11 +46,11 @@ export default async function ContentPage(props: PageProps) {
   return (
     <AppContainer scrollable={false}>
       <div className="flex flex-1 flex-col space-y-4">
-        <div className="flex items-start justify-end">
+        <div className="flex items-start">
           <Link href={`/dashboard/apis/${content.slug}/form`}>
             <Button size="sm">
-              <Plus className="h-4 w-4 mr-2" />
-              Add Entry
+              <Plus className="h-4 w-4" />
+              Add {content?.name || "Entry"}
             </Button>
           </Link>
         </div>

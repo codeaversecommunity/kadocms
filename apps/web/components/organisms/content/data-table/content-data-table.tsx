@@ -37,7 +37,7 @@ export default function ContentDataTable<TData, TValue>({
   });
 
   return (
-    <DataTable table={table} isSelectedRow>
+    <DataTable table={table}>
       <DataTableToolbar table={table} />
     </DataTable>
   );
